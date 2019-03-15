@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>map</title>
-    <style>
+    <style type="text/css">
         body {
             margin: 0;
             overflow: hidden;
         }
-
         #label {
             position: absolute;
             padding: 10px;
@@ -16,9 +16,6 @@
             line-height: 1;
             border-radius: 5px;
         }
-    </style>
-
-    <style type="text/css">
     .float_lefttop{
         position: relative;
     }   
@@ -31,7 +28,7 @@
         display:block;
         position: absolute;
         z-index:1;
-        filter:alpha(opacity=90);
+        filter:alpha(opacity=70);
         opacity:0.7;
     }
     .aa{
@@ -39,6 +36,29 @@
         position: relative;
         z-index:0;
     }
+    .left_img{
+        z-index: 1;
+        position: fixed;
+        left: 3%;
+        top: 67%;
+        width: 9%;
+    }
+    .image{
+        display: flex;
+    }
+    .left_img li img{
+        background-color: #fff;
+        border-radius:20%;
+        width: 90%;
+        height: 90%;
+/*        width: 40px;
+        height:40px;*/
+        
+    }
+    .img{
+        margin-bottom:20%;
+    }
+
     </style>
 
     <script src="libs/build/three-r100.js"></script>
@@ -63,28 +83,79 @@
 </head>
 <body>
     <div class="header">
-    <div class="float_lefttop">
-    <div class="header_bott">
-            <div class="menu">
-                <ul>
-                    <li><a id="jingdian">景点</a></li>
-                    <li><a id="zhusu">住宿</a></li>
-                    <li><a id="canyin">餐饮</a></li>
-                    <li><a id="fangda">放大</a></li>
-                    <li><a id="suoxiao">缩小</a></li>
-                    <li><a id="gps">定位</a></li>
-                </ul>
-            </div>
-            <div class="clear"></div>
-         </div> 
-         </div>
-         </div>
+        <div class="float_lefttop">
+            <div class="header_bott">
+                <div class="menu">
+                    <ul>
+                        <li><a id="jingdian">景点</a></li>
+                        <li><a id="zhusu">住宿</a></li>
+                        <li><a id="canyin">餐饮</a></li>
+                        <li><a id="fangda">放大</a></li>
+                        <li><a id="suoxiao">缩小</a></li>
+                        <li><a id="gps">定位</a></li>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div> 
+        </div>
+    </div>
 
 <div id="WebGL-output"></div>
 <div id="Stats-output"></div>
 
 <div id="label"></div>
-<script>
+
+<!-- 添加左下角标签 -->
+
+<div class="left_img">
+    <ul>
+        <li onclick="click()"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
+        <li><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
+        <li><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
+        <li><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
+    </ul>
+    
+</div>
+
+<!-- 添加左下角标签end -->
+<!-- 左下角控件添加事件 -->
+<script >
+    var oimg = document.getElementsByTagName("img");
+    for(var i=0; i<oimg.length; i++){
+   oimg[i].onclick = function(n){
+    　　　　return function(){
+                alert("下标索引值为："+n);    //    索引值从0开始
+            }
+    　　}(i)
+}
+    // oimg[0].onclick = function(){
+    //     alert("123");
+    // };
+    oimg[1].onclick = function() { 
+                    //放大按钮
+                    if(camera.position.z<=220&&camera.position.z>190){camera.position.z=190;}
+                    else if(camera.position.z<=190&&camera.position.z>160){camera.position.z=160;}
+                    else if(camera.position.z<=160&&camera.position.z>130){camera.position.z=130;}
+                    else if(camera.position.z<=130&&camera.position.z>100){camera.position.z=100;}
+                    else if(camera.position.z<=100&&camera.position.z>=70){camera.position.z=70;}
+                };
+    oimg[2].onclick = function() { 
+                    //缩小按钮
+                    if(camera.position.z<=220&&camera.position.z>=190){camera.position.z=220;}
+                    else if(camera.position.z<190&&camera.position.z>=160){camera.position.z=190;}
+                    else if(camera.position.z<160&&camera.position.z>=130){camera.position.z=160;}
+                    else if(camera.position.z<130&&camera.position.z>=100){camera.position.z=130;}
+                    else if(camera.position.z<100&&camera.position.z>=70){camera.position.z=100;}
+                }
+    // oimg[3].onclick = function(){
+        
+    // };
+
+</script>
+
+<!-- 左下角控件添加事件end -->
+
+<script type="text/javascript">
     var data_jingdian=[{"what":"1","position":new THREE.Vector3(9,0,-1),"name":"景点1","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"1","position":new THREE.Vector3(34,8,-1),"name":"景点2","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"1","position":new THREE.Vector3(65,-9,-1),"name":"景点3","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"1","position":new THREE.Vector3(4,-24,-1),"name":"景点4","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"2","position":new THREE.Vector3(69,25,-1),"name":"住宿1","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"2","position":new THREE.Vector3(-25,-29,-1),"name":"住宿2","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"2","position":new THREE.Vector3(44,-68,-1),"name":"住宿3","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"3","position":new THREE.Vector3(15,49,-1),"name":"餐饮1","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"3","position":new THREE.Vector3(34,34,-1),"name":"餐饮2","content":"介绍文字","mp3":"解说文件","pic":"图片文件"},{"what":"3","position":new THREE.Vector3(63,25,-1),"name":"餐饮3","content":"介绍文字","mp3":"解说文件","pic":"图片文件"}];
     var yuandian_JWD=new THREE.Vector2(120.697678,27.915796);
     var bili=0.01;
@@ -589,6 +660,7 @@
 
     init();
     animate();
+
 
 </script>
 

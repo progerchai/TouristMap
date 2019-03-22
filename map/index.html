@@ -60,41 +60,59 @@
         <li><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
         <li><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
         <li><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
-    </ul>
-    
+    </ul>   
 </div>
-    <div class="pop" id="pop" style="display: none;">
-        <div class="pop-top" id="pop-top">
-         <div class="toplft" style="width: 200px;"><p>景区列表</p></div>
-          <div class="toplft" style="width: 200px;"><span class="pop-close" id="closedone">Ｘ</span></div>
-        </div>
-        <div class="pop-content" id="pop-content">
-            <div class="pop-content-right">
-                <p><a href="#">百丈漈</a><b class="lname"></b></p>
-                <p><a href="#">铜铃山</a><b class="price"></b></p>
-                <p><a href="#">月老山</a><b class="ltime"></b></p>
-                <p><a href="#">猴王谷</a><b class="synopsis"></b></p>
-                <p><a href="#">安福寺</a><b class="synopsis"></b></p>
-                <p><a href="#">刘基故里</a><b class="teasynopsis"></b></p>
-                <p><a href="#">朱阳九峰</a><b class="synopsis"></b></p>   
-                <p><a href="#">峡谷景廊</a><b class="synopsis"></b></p>
-                <p><a href="#">岩门大峡谷</a><b class="teacher"></b></p>     
-                <p><a href="#">九溪欢乐谷</a><b class="synopsis"></b></p>   
-            </div>
-        </div>
-        <div class="pop-foot">
-            <input type="button" value="VR实景" class="gotoVR" id="gotoVR" />
-            <input type="button" value="导航" class="gotoNav" id="gotoNav" />
+<!-- 添加左下角标签end -->
+<!-- 添加弹出框div -->
+<div class="pop" id="pop" style="display: none;">
+    <div class="pop-top" id="pop-top">
+     <div class="toplft" style="width: 200px;"><p>景区列表</p></div>
+      <div class="toplft" style="width: 200px;"><span class="pop-close" id="closedone">Ｘ</span></div>
+    </div>
+    <div class="pop-content" id="pop-content">
+        <div class="pop-content-right">
+            <p><a href="#">百丈漈</a><b class="lname"></b></p>
+            <p><a href="#">铜铃山</a><b class="price"></b></p>
+            <p><a href="#">月老山</a><b class="ltime"></b></p>
+            <p><a href="#">猴王谷</a><b class="synopsis"></b></p>
+            <p><a href="#">安福寺</a><b class="synopsis"></b></p>
+            <p><a href="#">刘基故里</a><b class="teasynopsis"></b></p>
+            <p><a href="#">朱阳九峰</a><b class="synopsis"></b></p>   
+            <p><a href="#">峡谷景廊</a><b class="synopsis"></b></p>
+            <p><a href="#">岩门大峡谷</a><b class="teacher"></b></p>     
+            <p><a href="#">九溪欢乐谷</a><b class="synopsis"></b></p>   
+            <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
         </div>
     </div>
-<!-- 添加左下角标签end -->
+    <div class="pop-foot">
+        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" />
+        <input type="button" value="导航" class="gotoNav" id="gotoNav" />
+    </div>
+</div>
+<!-- 添加弹出框div end -->
+<!-- 添加弹出介绍div -->
+<div class="intr" id="intr" style="display: none;">
+   <div class="intr-top">
+        <div class="left"><span>小熊维尼历险记</span></div>
+        <div class="right"><span id="close_intr">X</span></div>
+   </div>
+   <div class="intr-body"></div>
+</div>
+<!-- 添加弹出介绍div end-->
 <!-- 左下角控件添加事件 -->
 <script >
+
     var oimg = document.getElementsByTagName("img");
     var opop = document.getElementById("pop");
     var closedone = document.getElementById("closedone");
     var gotoNav = document.getElementById("gotoNav");
+    var label = document.getElementById("label");
+    var intr = document.getElementById("intr");
+    var close_intr = document.getElementById("close_intr");
 
+// 获取屏幕宽度高度
+    var height= $(window).height();
+    var width= $(window).width();
     gotoNav.onclick = function(){
         // if (isInstallApk(mContext, "com.autonavi.minimap")) {// 高德地图
 //             Intent intents = new Intent();
@@ -109,14 +127,68 @@
      // else{
         alert("跳转失败。");
     // }
+
+    //打开（下载）App
+    // var ua = window.navigator.userAgent.toLowerCase();
+    // //微信
+    // if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+    //     window.location.href='BaiduMap://';
+    // }else{//非微信浏览器
+    //     if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
+    //         var loadDateTime = new Date();
+    //         window.setTimeout(function() {
+    //             var timeOutDateTime = new Date();
+    //             if (timeOutDateTime - loadDateTime < 5000) {
+    //                 window.location = "https://itunes.apple.com/cn/app/%E7%99%BE%E5%BA%A6%E5%9C%B0%E5%9B%BE-%E7%A7%91%E6%8A%80%E8%AE%A9%E5%87%BA%E8%A1%8C%E6%9B%B4%E7%AE%80%E5%8D%95/id452186370?mt=8";//ios下载地址
+    //             } else {
+    //             window.close();
+    //             }
+    //         },2000);
+    //         window.location = "schema://";
+    //       }else if (navigator.userAgent.match(/android/i)) {
+    //         var state = null;
+    //         try {
+    //             window.location = 'schema://';
+    //             setTimeout(function(){
+    //                 window.location= ""; //android下载地址
+ 
+    //             },500);
+    //         } catch(e) {}
+    //     }
+    // }
 }
+close_intr.onclick=function(){
+    intr.style.display="none";
+}
+label.onclick=function(e){
+    intr.style.display="block";
+    var x = e.clientX;
+    var y = e.clientY;
+
+    if(y < height/2)
+    {
+        intr.style.left=x - width/2.7  +'px';
+        intr.style.top=y + height/20 +'px';
+    }
+    else
+    { 
+        intr.style.left=x - width/2.7 +'px';
+        intr.style.top=y -height/4 +'px';
+    }
+
+    intr.style.height=height/5.5+'px';
+    intr.style.width=width/1.5+'px';
+}
+
     closedone.onclick = function(){
         opop.style.display="none";
     }
 
+
     oimg[0].onclick = function(){
-        opop.style.height=$(window).height()/2+'px';
-        opop.style.width=$(window).width()/2+'px';
+
+        opop.style.height=height/2+'px';
+        opop.style.width=width/2+'px';
         // opop_content.style.height=$(window).width()/2+"px";
        if (opop.style.display=="none")
             opop.style.display="block";

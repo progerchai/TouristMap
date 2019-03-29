@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- 禁止缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>map</title>
 
     <script src="libs/build/three-r100.js"></script>
@@ -40,6 +44,7 @@
                         <li><a id="jingdian">景点</a></li>
                         <li><a id="zhusu">住宿</a></li>
                         <li><a id="canyin">餐饮</a></li>
+                        <li><a id="cesuo">厕所</a></li>
                     </ul>
                 </div>
                 <div class="clear"></div>
@@ -56,7 +61,7 @@
 
 <div class="left_img">
     <ul>
-        <li onclick="click()"><div class="img"><img src="images/vetorgram/list.png"></div></li>
+        <li><div class="img"><img src="images/vetorgram/list.png"></div></li>
         <li><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
         <li><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
         <li><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
@@ -93,22 +98,26 @@
 <!-- 添加弹出介绍div -->
 <div class="intr" id="intr" style="display: none;">
    <div class="intr-top">
-        <div class="left"><span>小熊维尼历险记</span></div>
-        <div class="right"><span id="close_intr">X</span></div>
+        <div class="left"><span id="intr_title">小熊维尼</span></div>
+        <div class="right"><span id="close_intr" onclick="close_intr()">X</span></div>
         <!-- 修改为 icon图标 -->
    </div>
    <div class="intr-body">
-       <div class="body_img"><img src="./images/intr.jpg"></div>
+       <div class="body_img"><img id="intr_img"></div>
         <div class="bodyright">
-            <div class="text"><p>亲爱的朋友们，准备好了吗？这宏伟晚宴的城堡阶梯将引领您踏上。。。。。</p></div>
+            <div class="text"><p id="intr_content">亲爱的朋友们，准备好了吗？这宏伟晚宴的城堡阶梯将引领您踏上。。。。。</p></div>
             <div class="intr-foot">
-                <button class="btn" id="speak">语音</button>
+                <button class="btn" id="speak" onclick="autoPlay()">语音</button>
                 <button class="btn" id="goto">导航</button>
             </div>
         </div>
    </div>
 </div>
 <!-- 添加弹出介绍div end-->
+<!-- 播放MP3 -->
+<audio id="myaudio" src="mp3/test1.mp3" controls="controls" loop="false" hidden="true" >
+</audio>
+<!-- 播放MP3end -->
 <!-- 左下角控件添加事件 -->
 <script >
 
@@ -118,7 +127,6 @@
     var gotoNav = document.getElementById("gotoNav");
     var label = document.getElementById("label");
     var intr = document.getElementById("intr");
-    var close_intr = document.getElementById("close_intr");
 
 // 获取屏幕宽度高度
     var height= $(window).height();
@@ -167,14 +175,25 @@
     //     }
     // }
 }
-close_intr.onclick=function(){
+//mp3播放函数
+function autoPlay(){
+    var myAuto = document.getElementById('myaudio');
+    // console.log("list:"+mp3list);
+        myAuto.src=mp3list;
+    myAuto.play();
+}
+//图片切换接口预留
+function imgchange(){
+    var intr_img = document.getElementById('intr_img');
+    intr_img.src=imglist;
+}
+function close_intr(){
     intr.style.display="none";
 }
-label.onclick=function(e){
+function showmes(e){
     intr.style.display="block";
     var x = e.clientX;
     var y = e.clientY;
-
     if(y < height/2)
     {
         intr.style.left=x - width/2.7  +'px';
@@ -237,6 +256,9 @@ label.onclick=function(e){
 <!-- 左下角控件添加事件end -->
 
 <script type="text/javascript">
+    //全局 mp3地址
+    var mp3list="";
+    var imglist="";
     var data_jingdian=[];
     var yuandian_JWD=new THREE.Vector2(0,0);
     var bili=1;
@@ -264,7 +286,7 @@ label.onclick=function(e){
         rawFile.onreadystatechange = function() {  
             if (rawFile.readyState === 4 && rawFile.status == "200") {  
                 callback(rawFile.responseText);  
-            }  
+            }
         }  
         rawFile.send(null);  
     }   
@@ -324,6 +346,9 @@ label.onclick=function(e){
         var cubeGeometry4 = new THREE.BoxGeometry(10, 10, 0.1);
         var cubeMaterial4 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/location.png') } );
 
+         var cubeGeometry5 = new THREE.BoxGeometry(10, 10, 0.1);
+        var cubeMaterial5 =new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/wc.jpg') } );
+
         readTextFile("startPoint.json", function(text){  
         var startPoint_data = JSON.parse(text); 
         var t = startPoint_data[0].position.split(','); 
@@ -346,7 +371,12 @@ label.onclick=function(e){
             for (var i = 0; i < data_jingdian.length; i++) {
                 switch(data_jingdian[i].what){
                     case "1":
+                    // alert("data_jingdian[i].cont:"+data_jingdian[i].pic);
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry1, cubeMaterial1);
+                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
+
+                        jingdian_cube[i].cont=data_jingdian[i].cont;
+                        jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
                         jingdian_cube[i].position.y=data_jingdian[i].position.y;
                         jingdian_cube[i].position.z=data_jingdian[i].position.z;
@@ -357,6 +387,9 @@ label.onclick=function(e){
                         break;
                     case "2":
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry2, cubeMaterial2);
+                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].cont=data_jingdian[i].cont;
+                        jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
                         jingdian_cube[i].position.y=data_jingdian[i].position.y;
                         jingdian_cube[i].position.z=data_jingdian[i].position.z;
@@ -367,12 +400,28 @@ label.onclick=function(e){
                         break;
                     case "3":
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry3, cubeMaterial3);
+                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].cont=data_jingdian[i].cont;
+                        jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
                         jingdian_cube[i].position.y=data_jingdian[i].position.y;
                         jingdian_cube[i].position.z=data_jingdian[i].position.z;
                         jingdian_cube[i].rotation.y=0;
                         jingdian_cube[i].name = data_jingdian[i].name;
                         jingdian_cube[i].what=3;
+                        scene.add(jingdian_cube[i]);
+                        break;
+                     case "4":
+                        jingdian_cube[i] = new THREE.Mesh(cubeGeometry5, cubeMaterial5);
+                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].cont=data_jingdian[i].cont;
+                        jingdian_cube[i].pic=data_jingdian[i].pic;
+                        jingdian_cube[i].position.x=data_jingdian[i].position.x;
+                        jingdian_cube[i].position.y=data_jingdian[i].position.y;
+                        jingdian_cube[i].position.z=data_jingdian[i].position.z;
+                        jingdian_cube[i].rotation.y=0;
+                        jingdian_cube[i].name = data_jingdian[i].name;
+                        jingdian_cube[i].what=4;
                         scene.add(jingdian_cube[i]);
                         break;
                 }
@@ -403,11 +452,20 @@ label.onclick=function(e){
 
         // 获取 raycaster 和所有模型相交的数组，其中的元素按照距离排序，越近的越靠前
         var intersects = getIntersects(event);
-
         // 获取选中最近的 Mesh 对象
         if (intersects.length !== 0&& intersects[0].object instanceof THREE.Mesh ) {
             selectObject = intersects[0].object;
-            gotoGoods(selectObject);
+            //获取音频
+            if(selectObject.mp3!=null)
+                mp3list=selectObject.mp3;
+            //获取图片地址
+            if(selectObject.pic!=null)
+                imglist=selectObject.pic;
+                imgchange();
+            if(selectObject.name!="地图")
+                showmes(event);
+            else
+                close_intr();
             // console.log(intersects);
         } else {
             // alert("未选中 Mesh!");
@@ -474,6 +532,9 @@ label.onclick=function(e){
                         else if (allchildren[i].what=="3") {
                             allchildren[i].position.z=-1;
                         }
+                        else if (allchildren[i].what=="4") {
+                            allchildren[i].position.z=-1;
+                        }
                     }
                     
                 }
@@ -489,6 +550,9 @@ label.onclick=function(e){
                             allchildren[i].position.z=1;
                         }
                         else if (allchildren[i].what=="3") {
+                            allchildren[i].position.z=-1;
+                        }
+                        else if (allchildren[i].what=="4") {
                             allchildren[i].position.z=-1;
                         }
                     }
@@ -508,6 +572,28 @@ label.onclick=function(e){
                             allchildren[i].position.z=-1;
                         }
                         else if (allchildren[i].what=="3") {
+                            allchildren[i].position.z=1;
+                        }
+                        else if (allchildren[i].what=="4") {
+                            allchildren[i].position.z=-1;
+                        }
+                    }
+                }
+            );
+        $("#cesuo").click(
+                function() { 
+                    var allchildren=scene.children;
+                    for (var i = 0; i <allchildren.length; i++) {
+                        if (allchildren[i].what=="1") {
+                            allchildren[i].position.z=-1;
+                        }
+                        else if (allchildren[i].what=="2") {
+                            allchildren[i].position.z=-1;
+                        }
+                        else if (allchildren[i].what=="3") {
+                            allchildren[i].position.z=-1;
+                        }
+                        else if (allchildren[i].what=="4") {
                             allchildren[i].position.z=1;
                         }
                     }
@@ -618,17 +704,12 @@ label.onclick=function(e){
         });
         // 显示模型信息
         $("#label").text(object.name);
-    }
+        $("#intr_title").text(object.name);
+        $("#intr_content").text(object.cont);
 
-    //跳转网页
-    function gotoGoods(object) {
-        var goods_name=object.name;
-        switch(goods_name){
-            // case "book01":
-            //     window.open(booksMtl[number*6].link_url+"?materials="+booksMtl[number*6].materials);
-            //     break;
-            // case "book02":
-        }
+
+
+
     }
 
     function guiwei(){

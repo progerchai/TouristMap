@@ -31,7 +31,7 @@ body {
 }
 .left_img{
     z-index: 1;
-    position: fixed;
+    position: absolute;
     left: 3%;
     top: 67%;
     width: 9%;
@@ -50,6 +50,9 @@ height:40px;*/
 }
 .img{
     margin-bottom:20%;
+}
+.icon-cuowu{
+    color:#5D5D5D;
 }
 .pop{ 
     position: absolute; 

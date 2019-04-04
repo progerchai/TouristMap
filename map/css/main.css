@@ -159,22 +159,23 @@ height:40px;*/
 }
 /*简易居中，后期优化*/
 .body_img img{
-    margin-top:20%;
+    margin-top:16%;
     margin-bottom:20%;
 }
 .bodyright{
     width: 70%;
-    /*background-color: #DD5044;*/
     padding: 4%;
+    height: 100%;
+
 }
 .bodyright .text{
     line-height: 12px;
     font-size: 2px;
+    height: 30%;
 }
 .btn { 
     display: block; 
     position: relative; 
-    /*background: #7FD340; */
     color: #fff; 
     height: 20px;
     cursor: pointer; 
@@ -190,5 +191,7 @@ height:40px;*/
     flex-direction: row;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 5%;
+    padding-top: 10%;
+    height: 30%;
+    bottom: 0px;
 }

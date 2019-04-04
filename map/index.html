@@ -99,17 +99,17 @@
 <!-- 添加弹出介绍div -->
 <div class="intr" id="intr" style="display: none;">
    <div class="intr-top">
-        <div class="left"><span id="intr_title">小熊维尼</span></div>
+        <div class="left"><span id="intr_title"></span></div>
         <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
         <!-- 修改为 icon图标 -->
    </div>
    <div class="intr-body">
        <div class="body_img"><img id="intr_img"></div>
         <div class="bodyright">
-            <div class="text"><p id="intr_content">亲爱的朋友们，准备好了吗？这宏伟晚宴的城堡阶梯将引领您踏上。。。。。</p></div>
+            <div class="text"><p id="intr_content"></p></div>
             <div class="intr-foot">
                 <button class="btn" id="speak" onclick="autoPlay()">语音</button>
-                <button class="btn" id="goto">导航</button>
+                <button class="btn" id="goto" onclick="gotoMap()">导航</button>
             </div>
         </div>
    </div>
@@ -135,8 +135,13 @@
     var height= $(window).height();
     var width= $(window).width();
 
-    goto.onclick = function(){
-    	var mapUrl_tx = "http://apis.map.qq.com/uri/v1/marker?marker=coord:27.916243,120.709744;title:"+"测试inform.orgName"+";addr:"+"测试inform.orgAddress"+"&referer=yellowpage";
+function gotoMap(){
+    var position = position_jw.split(",");
+    var goto_lon=position[0];
+    var goto_lat=position[1];
+    console.log("经纬度为:"+goto_lat+","+goto_lon);
+
+    var mapUrl_tx = "http://apis.map.qq.com/uri/v1/marker?marker=coord:"+goto_lat+","+goto_lon+";title:"+goto_orgName+";addr:"+goto_orgAddress+"&referer=yellowpage";
     	console.log("mapUrl_tx"+mapUrl_tx);
     	// 腾讯地图
 	window.open(mapUrl_tx);
@@ -225,6 +230,9 @@ function showmes(e){
 <script type="text/javascript">
     //全局 mp3地址
     var mp3list="";
+    var position_jw="";
+    var goto_orgName="";
+    var goto_orgAddress="";
     var imglist="";
     var data_jingdian=[];
     var yuandian_JWD=new THREE.Vector2(0,0);
@@ -285,7 +293,8 @@ function showmes(e){
 
     // 相机
     function initCamera() {
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
+        // camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 2000);
         camera.position.set(0, 0, 100);
         // camera.position.set(0, 400, 600);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -300,8 +309,9 @@ function showmes(e){
         }
         // renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setSize(window.innerWidth, window.innerHeight);
-        // renderer.setSize(800, 600);
+        // renderer.setSize(document.body.clientWidth, document.body.clientHeight);
         renderer.setClearColor(0x666666);
+        renderer.setPixelRatio(window.devicePixelRatio);
         document.body.appendChild(renderer.domElement);
     }
 
@@ -312,7 +322,7 @@ function showmes(e){
         // model
 
         var cubeGeometry = new THREE.BoxGeometry(266, 190, 0.1);
-        var cubeMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/map.png') } );
+        var cubeMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/map.png')} );
         cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
         cube.position.set(0, 0, 0);
         cube.rotation.y=0;
@@ -341,11 +351,16 @@ function showmes(e){
         yuandian_JWD.x=t[0];
         yuandian_JWD.y=t[1];
         bili=Number(startPoint_data[1].bili);
-        console.log(yuandian_JWD);
+        var t2 = startPoint_data[2].xiangsu.split(','); 
+        cube.scale.x=t2[0]/266.0;
+        cube.scale.y=t2[1]/190.0;
+        console.log("cube.scale");
+        console.log(cube.scale);
         readTextFile("palace.json", function(text){  
             data_jingdian = JSON.parse(text); 
             for (var i = 0; i < data_jingdian.length; i++) {
                 var t = data_jingdian[i].position.split(','); 
+                var positon_jw=data_jingdian[i].position;
                 var temp_pos3=new THREE.Vector3(0,0,-1);
                 var temp_pos2=new THREE.Vector2(0,0);
                 temp_pos2.x=getShortDistance(yuandian_JWD.x,yuandian_JWD.y,t[0],t[1]).x;
@@ -353,14 +368,15 @@ function showmes(e){
                 temp_pos3.x=temp_pos2.x*bili;
                 temp_pos3.y=temp_pos2.y*bili;
                 data_jingdian[i].position=temp_pos3;
+                data_jingdian[i].position_jw=positon_jw;
             } 
             for (var i = 0; i < data_jingdian.length; i++) {
                 switch(data_jingdian[i].what){
                     case "1":
-                    // alert("data_jingdian[i].cont:"+data_jingdian[i].pic);
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry1, cubeMaterial1);
                         jingdian_cube[i].mp3=data_jingdian[i].mp3;
-
+                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
+                        jingdian_cube[i].address=data_jingdian[i].address;
                         jingdian_cube[i].cont=data_jingdian[i].cont;
                         jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
@@ -374,6 +390,8 @@ function showmes(e){
                     case "2":
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry2, cubeMaterial2);
                         jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
+                        jingdian_cube[i].address=data_jingdian[i].address;
                         jingdian_cube[i].cont=data_jingdian[i].cont;
                         jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
@@ -387,6 +405,8 @@ function showmes(e){
                     case "3":
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry3, cubeMaterial3);
                         jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
+                        jingdian_cube[i].address=data_jingdian[i].address;
                         jingdian_cube[i].cont=data_jingdian[i].cont;
                         jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
@@ -400,6 +420,8 @@ function showmes(e){
                      case "4":
                         jingdian_cube[i] = new THREE.Mesh(cubeGeometry5, cubeMaterial5);
                         jingdian_cube[i].mp3=data_jingdian[i].mp3;
+                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
+                        jingdian_cube[i].address=data_jingdian[i].address;
                         jingdian_cube[i].cont=data_jingdian[i].cont;
                         jingdian_cube[i].pic=data_jingdian[i].pic;
                         jingdian_cube[i].position.x=data_jingdian[i].position.x;
@@ -412,6 +434,8 @@ function showmes(e){
                         break;
                 }
             }
+
+
             pos_jingdian_cube_length=jingdian_cube.length;
             jingdian_cube[pos_jingdian_cube_length] = new THREE.Mesh(cubeGeometry4, cubeMaterial4);
             jingdian_cube[pos_jingdian_cube_length].position.set(999,999,1);
@@ -441,9 +465,19 @@ function showmes(e){
         // 获取选中最近的 Mesh 对象
         if (intersects.length !== 0&& intersects[0].object instanceof THREE.Mesh ) {
             selectObject = intersects[0].object;
+            //获取经纬度
+            if(selectObject.position_jw!=null)
+                position_jw=selectObject.position_jw;
             //获取音频
             if(selectObject.mp3!=null)
                 mp3list=selectObject.mp3;
+
+            //获取位置名
+            if(selectObject.name!=null)
+                goto_orgName=selectObject.name;
+            //获取详细地址信息
+            if(selectObject.address!=null)
+                goto_orgAddress=selectObject.address;
             //获取图片地址
             if(selectObject.pic!=null)
                 imglist=selectObject.pic;
@@ -652,26 +686,10 @@ function showmes(e){
         scene.add(new THREE.AmbientLight(0xffffff));   
     }
 
-    // 初始化 dat.GUI
     function initGui() {
-        // // 保存需要修改相关数据的对象
-        // gui = new function () {
-
-        // }
-        // // 属性添加到控件
-        // var guiControls = new dat.GUI();
     }
 
-    // 初始化性能插件
     function initStats() {
-        // var stats = new Stats();
-
-        // stats.domElement.style.position = 'absolute';
-        // stats.domElement.style.left = '0px';
-        // stats.domElement.style.top = '0px';
-
-        // document.body.appendChild(stats.domElement);
-        // return stats;
     }
 
     // 更新div的位置
@@ -679,23 +697,10 @@ function showmes(e){
         // 获取窗口的一半高度和宽度
         let halfWidth = window.innerWidth / 2;
         let halfHeight = window.innerHeight / 2;
-
         // 逆转相机求出二维坐标
         let vector = object.position.clone().project(camera);
-
-        // 修改 div 的位置
-        // $("#label").css({
-        //     left: vector.x * halfWidth + halfWidth,
-        //     top: -vector.y * halfHeight + halfHeight - object.position.y
-        // });
-        // 显示模型信息
-        // $("#label").text(object.name);
         $("#intr_title").text(object.name);
         $("#intr_content").text(object.cont);
-
-
-
-
     }
 
     function guiwei(){
@@ -724,7 +729,6 @@ function showmes(e){
 
     // 更新控件
     function update() {
-        // stats.update();
         controls.update();
         controls.handleResize();
         guiwei();
@@ -747,7 +751,6 @@ function showmes(e){
             case 1:
                 // console.log("start");
                 touchPoint=getMouseOnScreen( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY ) ;
-                // console.log(touchPoint);
                 break;
             default: // 2 or more
                 break;

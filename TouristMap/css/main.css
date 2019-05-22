@@ -1,0 +1,17 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+html,body{
+	height: 100%;
+	overflow: hidden;
+	-webkit-overflow-scrolling: touch;
+}
+.button_div{
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    left: 10px;
+    top: 10px;
+}

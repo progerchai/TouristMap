@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- 禁止缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>map</title>
+    
+
+    <link href="./css/main.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/canvasdomain.js"></script>
+    <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+    
+
+</head>
+<body id="body">
+<canvas id='canvas'>您的浏览器不支持cnavas</canvas>
+<div class="button_div">
+    <button id="button_up">放大</button>
+    <button id="button_down">缩小</button>
+</div>
+
+<!-- <button type="button" onclick="swip()">向左边移动</button> -->
+<script type="text/javascript">
+    
+    //初始化画布
+(function int(){
+    canvas=document.getElementById('canvas');
+    context=canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+    loadImg();
+})();
+//按钮类型缩放功能
+$("#button_up").bind("click",function(){
+    scale(width/2,height/2,100);
+});
+$("#button_down").bind("click",function(){
+    scale(width/2,height/2,-100);
+});
+//阻止底层body滑动
+$("canvas").on("touchstart", function(e) {
+    e.preventDefault();
+});
+
+$("#canvas").bind("touchstart",function(e){
+    console.log("start");
+    pos = windowToCanvas(canvas,event.changedTouches[0].pageX,event.changedTouches[0].pageY);
+    console.log(event.changedTouches[0].pageX);
+    // dis_std = Math.sqrt(Math.pow(( event.changedTouches[0].pageX - event.changedTouches[1].pageX),2) + Math.pow((event.changedTouches[0].pageY - event.changedTouches[1].pageY),2));
+    if(e.changedTouches.length != 1)
+        distance = true;
+    console.log(pos);
+});
+$("#canvas").bind("touchmove",function(e){
+    // 约束单指操作，移动图片
+    if(e.originalEvent.targetTouches.length == 1)
+        {
+            canvas.style.cursor="move";
+            pos1=windowToCanvas(canvas,e.originalEvent.targetTouches[0].pageX,e.originalEvent.targetTouches[0].pageY);
+            var x=pos1.x-pos.x;
+            var y=pos1.y-pos.y;
+            console.log(x,y);
+            console.log("imgx,imgy",imgX,imgY);
+            // alert("单指操作");
+
+
+            // 图片移动范围约束,待完善
+            if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width||imgY+y<window.screen.availHeight-img.height)
+                return 0;
+
+            pos=pos1;
+            imgX+=x;
+            imgY+=y;
+            drawImage();
+        }
+    // 约束双指操作,调用缩放函数
+    if(e.originalEvent.targetTouches.length == 2)
+        {   
+            //若start初始状态没有两个手指点坐标，则设有两个手指坐标的瞬间作为dis_std的初始状态
+            if(!distance)
+            {
+                distance = true;
+                dis_std = Math.sqrt(Math.pow((e.originalEvent.targetTouches[0].pageX - e.originalEvent.targetTouches[1].pageX),2)+Math.pow((e.originalEvent.targetTouches[0].pageY - e.originalEvent.targetTouches[1].pageY),2));
+            }
+            pageX = e.originalEvent.targetTouches[0].pageX + e.originalEvent.targetTouches[1].pageX ;
+            pageY = e.originalEvent.targetTouches[0].pageY + e.originalEvent.targetTouches[1].pageY ;
+            // alert("双指操作delta");
+            dis_move = Math.sqrt(Math.pow((e.originalEvent.targetTouches[0].pageX - e.originalEvent.targetTouches[1].pageX),2)+Math.pow((e.originalEvent.targetTouches[0].pageY - e.originalEvent.targetTouches[1].pageY),2));
+            if(dis_move > dis_std)
+                delta = 120;
+            else if(dis_move < dis_std)
+                delta = -120;
+            
+        }
+
+    });
+
+$("#canvas").bind("touchend",function(e){
+    //弹出数据检查
+    // alert("数据：distance="+distance+"；dis_std:"+dis_std+"；dis_move:"+dis_move+"；位移差值："+Math.abs(dis_move - dis_std)+";delta"+delta);
+    if(delta!=0 && Math.abs(dis_move - dis_std)>30)
+            {
+                scale(pageX/2,pageY/2,delta);
+            }
+    console.log("结束：",e.originalEvent.changedTouches[0].pageX, e.originalEvent.changedTouches[0].pageY);
+    $("#canvas").bind("touchmove",function(e){});
+    $("#canvas").bind("touchend",function(e){});
+    canvas.style.cursor="default";
+    distance = false;
+    dis_move = 0;
+    delta = 0;
+});
+
+</script>
+</body>
+</html>

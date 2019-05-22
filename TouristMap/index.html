@@ -9,23 +9,97 @@
     <meta http-equiv="Expires" content="0" />
     <title>map</title>
     
-
+    <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="./css/main.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="js/canvasdomain.js"></script>
+    <script type="text/javascript" src="js/others.js"></script>
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
     
 
 </head>
 <body id="body">
-<canvas id='canvas'>您的浏览器不支持cnavas</canvas>
-<div class="button_div">
-    <button id="button_up">放大</button>
-    <button id="button_down">缩小</button>
+
+    <div class="sideBox">
+      <ul class="nav">
+        <li><a id="jingdian">景点</a></li>
+        <li><a id="zhusu">住宿</a></li>
+        <li><a id="canyin">餐饮</a></li>
+        <li><a id="cesuo">厕所</a></li>
+      </ul>
+    </div>
+
+<!-- 添加左下角标签 -->
+
+<div class="left_img">
+    <ul>
+        <li><div class="img"><img src="images/vetorgram/list.png"></div></li>
+        <li id="fangda"><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
+        <li id="suoxiao"><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
+        <li id="dingwei" onclick="readTextFile('json/palace.json')"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
+    </ul>   
 </div>
+<!-- 添加左下角标签end -->
+<!-- 添加弹出框div -->
+<div class="pop" id="pop" style="display: none;">
+    <div class="pop-top" id="pop-top">
+     <div class="toplft" style="width: 200px;"><p>景区列表</p></div>
+      <div class="toplft" style="width: 200px;"><span class="pop-close" id="closedone"><i class="iconfont icon-cuowu"></i></span></div>
+    </div>
+    <div class="pop-content" id="pop-content">
+        <div class="pop-content-right">
+            <p><a href="#">百丈漈</a><b class="lname"></b></p>
+            <p><a href="#">铜铃山</a><b class="price"></b></p>
+            <p><a href="#">月老山</a><b class="ltime"></b></p>
+            <p><a href="#">猴王谷</a><b class="synopsis"></b></p>
+            <p><a href="#">安福寺</a><b class="synopsis"></b></p>
+            <p><a href="#">刘基故里</a><b class="teasynopsis"></b></p>
+            <p><a href="#">朱阳九峰</a><b class="synopsis"></b></p>   
+            <p><a href="#">峡谷景廊</a><b class="synopsis"></b></p>
+            <p><a href="#">岩门大峡谷</a><b class="teacher"></b></p>     
+            <p><a href="#">九溪欢乐谷</a><b class="synopsis"></b></p>   
+            <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
+        </div>
+    </div>
+    <div class="pop-foot">
+        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" />
+        <input type="button" value="导航" class="gotoNav" id="gotoNav" onclick="gotoMap()" />
+    </div>
+</div>
+<!-- 添加弹出框div end -->
+<!-- 添加弹出介绍div -->
+<div class="intr" id="intr" style="display: none;">
+   <div class="intr-top">
+        <div class="left"><span id="intr_title"></span></div>
+        <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
+        <!-- 修改为 icon图标 -->
+   </div>
+   <div class="intr-body">
+       <div class="body_img"><img id="intr_img"></div>
+        <div class="bodyright">
+            <div class="text"><p id="intr_content"></p></div>
+            <div class="intr-foot">
+                <button class="btn" id="speak" onclick="autoPlay()">语音</button>
+                <button class="btn" id="goto" onclick="gotoMap()">导航</button>
+            </div>
+        </div>
+   </div>
+</div>
+<!-- 添加弹出介绍div end-->
+<!-- 播放MP3 -->
+<audio id="myaudio" src="mp3/test1.mp3" controls="controls" loop="false" hidden="true" >
+</audio>
+<!-- 播放MP3end -->
+
+<!-- canvas层 -->
+<canvas id='canvas'>您的浏览器不支持cnavas</canvas>
 
 <!-- <button type="button" onclick="swip()">向左边移动</button> -->
 <script type="text/javascript">
-    
+// 判断是否是微信端访问，若不是则拒绝访问
+    // judgeview();
+
+
+
     //初始化画布
 (function int(){
     canvas=document.getElementById('canvas');
@@ -35,10 +109,10 @@
     loadImg();
 })();
 //按钮类型缩放功能
-$("#button_up").bind("click",function(){
+$("#fangda").bind("click",function(){
     scale(width/2,height/2,100);
 });
-$("#button_down").bind("click",function(){
+$("#suoxiao").bind("click",function(){
     scale(width/2,height/2,-100);
 });
 //阻止底层body滑动
@@ -53,7 +127,6 @@ $("#canvas").bind("touchstart",function(e){
     // dis_std = Math.sqrt(Math.pow(( event.changedTouches[0].pageX - event.changedTouches[1].pageX),2) + Math.pow((event.changedTouches[0].pageY - event.changedTouches[1].pageY),2));
     if(e.changedTouches.length != 1)
         distance = true;
-    console.log(pos);
 });
 $("#canvas").bind("touchmove",function(e){
     // 约束单指操作，移动图片
@@ -63,8 +136,8 @@ $("#canvas").bind("touchmove",function(e){
             pos1=windowToCanvas(canvas,e.originalEvent.targetTouches[0].pageX,e.originalEvent.targetTouches[0].pageY);
             var x=pos1.x-pos.x;
             var y=pos1.y-pos.y;
-            console.log(x,y);
-            console.log("imgx,imgy",imgX,imgY);
+            // console.log(x,y);
+            // console.log("imgx,imgy",imgX,imgY);
             // alert("单指操作");
 
 
@@ -116,5 +189,6 @@ $("#canvas").bind("touchend",function(e){
 });
 
 </script>
+<script type="text/javascript" src="js/func.js"></script>
 </body>
 </html>

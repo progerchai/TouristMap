@@ -1,149 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <!-- 禁止缓存 -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>map</title>
+var oimg = document.getElementsByTagName("img");
+var opop = document.getElementById("pop");
+var closedone = document.getElementById("closedone");
+var gotoNav = document.getElementById("gotoNav");
+var goto = document.getElementById("goto");
 
-    
+var label = document.getElementById("label");
+var intr = document.getElementById("intr");
 
-    <link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
-    <!-- <link href="css/main.css" rel="stylesheet" type="text/css" media="all"/> -->
-    <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
-<!-- <link href="css/slider.css" rel="stylesheet" type="text/css" media="all"/> -->
-    <script src="libs/build/three-r100.js" defer></script>
-    <script src="libs/jquery-1.9.1.js"></script>
-    <script src="libs/Detector.js"></script>
-    <script src="libs/controls/TrackballControls.js"></script>
-    <!-- <script src="libs/controls/OrthographicTrackballControls.js"></script> -->
-    <script src="libs/libs/dat.gui.min.js"></script>
-    <script src="libs/libs/stats.min.js"></script>
-    <script src="libs/loader/DDSLoader.js"></script>
-    <script src="libs/loader/MTLLoader.js"></script>
-    <script src="libs/loader/OBJLoader.js"></script>
-    <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script> 
-    <script type="text/javascript" src="js/move-top.js"></script>
-    <script type="text/javascript" src="js/easing.js"></script>
-    <script type="text/javascript" src="js/startstop-slider.js"></script>
+// 禁止除微信端访问
+function judgeview(){
+        // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
+    var useragent = navigator.userAgent;
+    var isAndroid = useragent.indexOf('Android') > -1 || useragent.indexOf('Adr') > -1; //android终端
+    var isiOS = !!useragent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    console.log("是否是安卓端访问："+isAndroid);
+    console.log("是否是IOS端访问："+isiOS);
 
-    
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>    
-    <script type="text/javascript" src="http://www.jsons.cn/Down/jquery.xml2json.js"></script>
-
-    
-
-</head>
-<body>
-    <div class="header">
-        <div class="float_lefttop">
-            <div class="header_bott">
-                <div class="menu">
-                    <ul>
-                        <li><a id="jingdian">景点</a></li>
-                        <li><a id="zhusu">住宿</a></li>
-                        <li><a id="canyin">餐饮</a></li>
-                        <li><a id="cesuo">厕所</a></li>
-                    </ul>
-                </div>
-                <div class="clear"></div>
-            </div> 
-        </div>
-    </div>
-
-<div id="WebGL-output"></div>
-<div id="Stats-output"></div>
-
-<div id="label"></div>
-
-<!-- 添加左下角标签 -->
-
-<div class="left_img">
-    <ul>
-        <li><div class="img"><img src="images/vetorgram/list.png"></div></li>
-        <li><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
-        <li><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
-        <li onclick=""><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
-    </ul>   
-</div>
-<!-- 添加左下角标签end -->
-<!-- 添加弹出框div -->
-<div class="pop" id="pop" style="display: none;">
-    <div class="pop-top" id="pop-top">
-     <div class="toplft" style="width: 200px;"><p>景区列表</p></div>
-      <div class="toplft" style="width: 200px;"><span class="pop-close" id="closedone"><i class="iconfont icon-cuowu"></i></span></div>
-    </div>
-    <div class="pop-content" id="pop-content">
-        <div class="pop-content-right">
-            <p><a href="#">百丈漈</a><b class="lname"></b></p>
-            <p><a href="#">铜铃山</a><b class="price"></b></p>
-            <p><a href="#">月老山</a><b class="ltime"></b></p>
-            <p><a href="#">猴王谷</a><b class="synopsis"></b></p>
-            <p><a href="#">安福寺</a><b class="synopsis"></b></p>
-            <p><a href="#">刘基故里</a><b class="teasynopsis"></b></p>
-            <p><a href="#">朱阳九峰</a><b class="synopsis"></b></p>   
-            <p><a href="#">峡谷景廊</a><b class="synopsis"></b></p>
-            <p><a href="#">岩门大峡谷</a><b class="teacher"></b></p>     
-            <p><a href="#">九溪欢乐谷</a><b class="synopsis"></b></p>   
-            <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
-        </div>
-    </div>
-    <div class="pop-foot">
-        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" />
-        <input type="button" value="导航" class="gotoNav" id="gotoNav" />
-    </div>
-</div>
-<!-- 添加弹出框div end -->
-<!-- 添加弹出介绍div -->
-<div class="intr" id="intr" style="display: none;">
-   <div class="intr-top">
-        <div class="left"><span id="intr_title"></span></div>
-        <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
-        <!-- 修改为 icon图标 -->
-   </div>
-   <div class="intr-body">
-       <div class="body_img"><img id="intr_img"></div>
-        <div class="bodyright">
-            <div class="text"><p id="intr_content"></p></div>
-            <div class="intr-foot">
-                <button class="btn" id="speak" onclick="autoPlay()">语音</button>
-                <button class="btn" id="goto" onclick="gotoMap()">导航</button>
-            </div>
-        </div>
-   </div>
-</div>
-<!-- 添加弹出介绍div end-->
-<!-- 播放MP3 -->
-<audio id="myaudio" src="mp3/test1.mp3" controls="controls" loop="false" hidden="true" >
-</audio>
-<!-- 播放MP3end -->
-<!-- 左下角控件添加事件 -->
-<script >
-
-    var oimg = document.getElementsByTagName("img");
-    var opop = document.getElementById("pop");
-    var closedone = document.getElementById("closedone");
-    var gotoNav = document.getElementById("gotoNav");
-    var goto = document.getElementById("goto");
-    
-    var label = document.getElementById("label");
-    var intr = document.getElementById("intr");
-
-// 获取屏幕宽度高度
-    var height= $(window).height();
-    var width= $(window).width();
-
+    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+        // 这里警告框会阻塞当前页面继续加载
+        alert('已禁止本次访问：您必须使用微信内置浏览器访问本页面！');
+        // 以下代码是用javascript强行关闭当前页面
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+}
+//链接到百度地图
 function gotoMap(){
+    //获取目标地点的相关信息，不用获取本地相关信息
     var position = position_jw.split(",");
-    var goto_lon=position[0];
-    var goto_lat=position[1];
+    var goto_lon=120.69477;//目标地点经度
+    var goto_lat=27.92325;//目标地点纬度
+    var goto_orgName = "温州大学";
+    var goto_orgAddress = "温州大学，经度:120.69477纬度:27.92325";
     console.log("经纬度为:"+goto_lat+","+goto_lon);
 
     var mapUrl_tx = "http://apis.map.qq.com/uri/v1/marker?marker=coord:"+goto_lat+","+goto_lon+";title:"+goto_orgName+";addr:"+goto_orgAddress+"&referer=yellowpage";
-    	console.log("mapUrl_tx"+mapUrl_tx);
     	// 腾讯地图
 	window.open(mapUrl_tx);
 
@@ -224,11 +116,9 @@ function showmes(e){
         alert("经度："+now_JWD.x+"纬度："+now_JWD.y+"juli::"+now_distance.x+"y"+now_distance.y);
     };
 
-</script>
 
-<!-- 左下角控件添加事件end -->
+// <!-- 左下角控件添加事件end -->
 
-<script type="text/javascript">
     //全局 mp3地址
     var mp3list="";
     var position_jw="";
@@ -236,36 +126,10 @@ function showmes(e){
     var goto_orgAddress="";
     var imglist="";
     var data_jingdian=[];
-    var yuandian_JWD=new THREE.Vector2(0,0);
     var bili=1;
     console.log("yuandian_JWD:");
     console.log(yuandian_JWD);
 
-    var isJWD=-1;
-    var now_JWD=new THREE.Vector2(0,0);
-    var now_distance=new THREE.Vector2(0.1,0.2);
-    var stats = initStats();
-    var scene, camera, renderer, controls, light, selectObject,cube,pos_cube,pos_jingdian_cube_length;
-    var jingdian_cube=new Array();
-    var touchPoint=new THREE.Vector2(0,0);
-
-
-// 禁止除微信端访问
-    // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
-    var useragent = navigator.userAgent;
-	var isAndroid = useragent.indexOf('Android') > -1 || useragent.indexOf('Adr') > -1; //android终端
-    var isiOS = !!useragent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-	console.log("是否是安卓端访问："+isAndroid);
-	console.log("是否是IOS端访问："+isiOS);
-
-    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
-        // 这里警告框会阻塞当前页面继续加载
-        alert('已禁止本次访问：您必须使用微信内置浏览器访问本页面！');
-        // 以下代码是用javascript强行关闭当前页面
-        var opened = window.open('about:blank', '_self');
-        opened.opener = null;
-        opened.close();
-    }
 
     function getMouseOnScreen(pageX, pageY) {
 
@@ -274,18 +138,7 @@ function showmes(e){
         vector.y=( pageY - this.screenTop ) / this.screen.height;
         return vector;
     }
-    function readTextFile(file, callback) {  
-        var rawFile = new XMLHttpRequest();  
-        rawFile.overrideMimeType("application/json");  
-        rawFile.open("GET", file, true);  
-        rawFile.onreadystatechange = function() {  
-            if (rawFile.readyState === 4 && rawFile.status == "200") {  
-                callback(rawFile.responseText);  
-            }
-        }  
-        rawFile.send(null);  
-    }   
-    
+
 
     // 场景
     function initScene() {
@@ -659,7 +512,7 @@ function showmes(e){
     function getShortDistance(lon1, lat1, lon2, lat2) {
         var ew1, ns1, ew2, ns2;
         var dx, dy, dew;
-
+        var distance=new THREE.Vector2(0,0);
         // 角度转换为弧度
         ew1 = lon1 * DEF_PI180;
         ns1 = lat1 * DEF_PI180;
@@ -669,11 +522,10 @@ function showmes(e){
         dew = ew1 - ew2;
         dx = DEF_R * Math.cos(ns1) * dew; // 东西方向长度(在纬度圈上的投影长度)
         dy = DEF_R * (ns1 - ns2); // 南北方向长度(在经度圈上的投影长度)
+        distance.x = dx.toFixed(0);
+        distance.y = dy.toFixed(0);
         // console.log(distance);
-        return {
-            x:dx.toFixed(0),
-            y:dy.toFixed(0)
-        };
+        return distance;
     }
     
 
@@ -775,49 +627,3 @@ function showmes(e){
 
         }
     }
-
-    function touchend( event ) {
-        touchPoint=new THREE.Vector2(0,0);
-        // console.log(cube.position);
-        // console.log(camera.position.z);
-    }
-
-    // 初始化
-    function init() {
-        initScene();
-        initCamera();
-        initRenderer();
-        
-        initLight();
-        initContent();
-        initControls();
-        initGui();
-        addEventListener('click', onMouseDblclick, false);
-        addEventListener('resize', onWindowResize, false);
-        addEventListener('keydown', onKeyDown, false);
-        addEventListener('touchstart', touchstart, false );
-        addEventListener('touchend', touchend, false );
-        addEventListener('touchmove', touchmove, true );
-
-        // getLocation();
-    }
-
-    function animate() {
-        if (selectObject != undefined && selectObject != null) {
-            renderDiv(selectObject);
-        }
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-        update();
-    }
-
-    init();
-    animate();
-
-
-</script>
-
-
-
-</body>
-</html>

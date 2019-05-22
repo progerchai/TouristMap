@@ -1,0 +1,114 @@
+[{
+    "what": "1",
+    "position": "120.709744,27.916243",
+    "name": "景点1",
+    "address":"我是景点1的具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "https://www.ffgbookbar.cn/map/mp3/test1.mp3",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "1",
+    "position": "120.683456,27.912222",
+    "name": "景点2",
+    "address":"我是景点2具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "https://www.ffgbookbar.cn/map/mp3/test2.mp3",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "1",
+    "position": "120.699595,27.910505",
+    "name": "景点3",
+    "address":"我是景点3具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "1",
+    "position": "120.691826,27.917836",
+    "name": "景点4",
+    "address":"我是景点4具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "2",
+    "position": "120.696658,27.911471",
+    "name": "住宿1",
+    "address":"我是住宿1具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "2",
+    "position": "120.690000,27.910000",
+    "name": "住宿2",
+    "address":"我是住宿2具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "2",
+    "position": "120.682397,27.9157400",
+    "name": "住宿3",
+    "address":"我是住宿3具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "3",
+    "position": "120.67989,27.910000",
+    "name": "餐饮1",
+    "address":"我是餐饮1具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "3",
+    "position": "120.696534,27.911654",
+    "name": "餐饮2",
+    "address":"我是餐饮2具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "3",
+    "position": "120.709744,27.916243",
+    "name": "餐饮3",
+    "address":"我是餐饮3具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "4",
+    "position": "120.709744,27.916243",
+    "name": "厕所1",
+    "address":"我是厕所1具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "4",
+    "position": "120.709744,27.916243",
+    "name": "厕所2",
+    "address":"我是厕所2具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "4",
+    "position": "120.709744,27.916243",
+    "name": "厕所3",
+    "address":"我是厕所3具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}, {
+    "what": "4",
+    "position": "120.709744,27.916243",
+    "name": "厕所4",
+    "address":"我是厕所4具体地址信息",
+    "cont": "介绍文字",
+    "mp3": "解说文件",
+    "pic": "images/intr.jpg"
+}
+]

@@ -59,24 +59,6 @@ function drawImage(){
 }
 
 
-// 禁止除微信端访问
-function judgeview(){
-        // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
-    var useragent = navigator.userAgent;
-    var isAndroid = useragent.indexOf('Android') > -1 || useragent.indexOf('Adr') > -1; //android终端
-    var isiOS = !!useragent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-    console.log("是否是安卓端访问："+isAndroid);
-    console.log("是否是IOS端访问："+isiOS);
-
-    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
-        // 这里警告框会阻塞当前页面继续加载
-        alert('已禁止本次访问：您必须使用微信内置浏览器访问本页面！');
-        // 以下代码是用javascript强行关闭当前页面
-        var opened = window.open('about:blank', '_self');
-        opened.opener = null;
-        opened.close();
-    }
-}
 // 根据缩放比例重绘图片
 // function drawImageByScale(scale){
 //     var dx = canvas.width/2 -img.width*scale/2;

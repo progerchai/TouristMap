@@ -14,7 +14,7 @@
     <script type="text/javascript" src="js/canvasdomain.js"></script>
     <script type="text/javascript" src="js/others.js"></script>
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
-    
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=您申请的key值"></script>
 
 </head>
 <body id="body">
@@ -98,7 +98,55 @@
 // 判断是否是微信端访问，若不是则拒绝访问
     // judgeview();
 
+//计算经纬度两点之间的距离
+function computeDis(lon1, lat1, lon2, lat2){
+    var m1 = new AMap.Marker({
+        position: new AMap.LngLat(lon1, lat1)
+    });
+    var m2 = new AMap.Marker({
+        position:new AMap.LngLat(lon2, lat2)
+    });
+    var p1 = m1.getPosition();
+    var p2 = m2.getPosition();
+    var distance = Math.round(p1.distance(p2));
+   return distance;
+}
+//经纬度计算方位角。lon1(经度),lat1(纬度)为标准
+function getazimuth(lon1, lat1, lon2, lat2){
+    // var Aj=121.53721,Aw=29.829484,Bj=121.549777,Bw=29.832009;
+    // var Aj=lon1,Aw=lat1,Bj=lon2,Bw=lat2;
+    // var Aj=113.14,Aw=23.08,Bj=110.47,Bw=21.26;
+// 方位角方法1
+    // var cos=Math.cos(90-Bw)*Math.cos(90-Aw)+Math.sin(90-Bw)*Math.sin(90-Aw)*Math.cos(Bj-Aj)
+    // var sin =Math.sqrt(1-Math.pow(cos,2));
+    // var azimuth = Math.asin((Math.sin(90-Bw)*Math.sin(Bj-Aj))/sin)*180/Math.PI;
+    // return azimuth;
 
+// 方位角方法2
+    // var tgAAA=(Math.cos(Bw)*Math.sin(Bj-Aj))/(Math.sin(Bw)*Math.cos(Aw)-Math.cos(Bw)*Math.sin(Aw)*Math.cos(Bj-Aj));
+    // var azimuth = Math.atan(tgAAA)*180/Math.PI;
+    // return azimuth;
+
+// 计算不同维度的地球半径进行勾股计算
+    var earthradio = DEF_C * Math.cos(lat1);
+    var per_lon_dis = earthradio/360;
+    var dis_x =(lon2 - lon1) * per_lon_dis;
+    var distance = computeDis(lon1, lat1, lon2, lat2);
+    var dis_y = Math.sqrt(Math.abs(Math.pow(distance,2)- Math.pow(dis_x,2)));//计算出来是绝对正值，要进行对比
+    if(lat1<lat2)
+        dis_y = -dis_y;
+    return {
+        dis_x:dis_x,
+        dis_y:dis_y
+    }
+}
+var dis = getazimuth(120.697878,27.915796,120.709744,27.916243);
+console.log("两点相对距离为："+dis.dis_x+" "+dis.dis_y);
+
+
+//39.94607,116.32793  31.24063,121.42575
+var dis = computeDis(116.32793 ,39.94607,121.42575,31.24063);
+console.log("两点距离为："+computeDis(116.697878,39.916243,120.709744,27.916243));
 
     //初始化画布
 (function int(){

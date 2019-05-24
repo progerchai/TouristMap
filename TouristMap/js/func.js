@@ -7,6 +7,7 @@ var goto = document.getElementById("goto");
 var label = document.getElementById("label");
 var intr = document.getElementById("intr");
 
+// putIcons(20,10,50,50,"images/hotel.png");
 // 禁止除微信端访问
 function judgeview(){
         // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
@@ -43,14 +44,63 @@ function gotoMap(){
 //mp3播放函数
 function autoPlay(){
     var myAuto = document.getElementById('myaudio');
-    // console.log("list:"+mp3list);
-        myAuto.src=mp3list;
+    // console.log("list:"+mp3list); 
+         myAuto.load=function(){
+            myAuto.src= mp3list;
+         }
     myAuto.play();
 }
+
+// 地图上显示个点图标
+function showIcons( type ){
+    var arraymes = [] ;
+    for(var i = 0;i<information.length;i++)
+    {
+        if(information[i].what == type)
+            arraymes.push(information[i]);
+    } 
+    // putIcons(arraymes);//将图片输出在前端
+}
+//同一类型的image进行展示
+function putIcons(x,y,width,height,url){
+    // var arraymes = array;
+    var imglist = document.getElementById("imglist");
+    var img = document.createElement("img");
+    //设置img相关属性（图片路径，绝对定位，起始位置xy,图片宽高）
+    img.src = url;
+    img.style.position = "absolute";
+    img.style.width = width +"px";
+    img.style.height = height+"px";
+    img.style.left = x +"px";
+    img.style.top = y+"px";
+
+    imglist.appendChild(img);
+}
+//展示列表box
+function showLieBiao(){
+     var opop = document.getElementById("pop");
+        opop.style.height=height/2+'px';
+        opop.style.width=width/2+'px';
+     if (opop.style.display=="none")
+            opop.style.display="block";
+        else
+            opop.style.display="none";
+}
+
+//按钮类型进行缩放
+function fangda(){
+     scale(width/2,height/2,100);
+}
+function suoxiao(){
+     scale(width/2,height/2,-100);
+}
+
+
+
 //图片切换接口预留
 function imgchange(){
     var intr_img = document.getElementById('intr_img');
-    intr_img.src=imglist;
+    intr_img.src=imglist+"";
 }
 function close_intr(){
     intr.style.display="none";
@@ -74,53 +124,11 @@ function showmes(e){
     intr.style.width=width/1.5+'px';
 }
 
-    closedone.onclick = function(){
-        opop.style.display="none";
-    }
+closedone.onclick = function(){
+    opop.style.display="none";
+}
 
 
-    oimg[0].onclick = function(){
-
-        opop.style.height=height/2+'px';
-        opop.style.width=width/2+'px';
-        // opop_content.style.height=$(window).width()/2+"px";
-       if (opop.style.display=="none")
-            opop.style.display="block";
-        else
-            opop.style.display="none";
-
-    };
-    oimg[1].onclick = function() { 
-                    //放大按钮
-        if(camera.position.z<=220&&camera.position.z>190){camera.position.z=190;}
-        else if(camera.position.z<=190&&camera.position.z>160){camera.position.z=160;}
-        else if(camera.position.z<=160&&camera.position.z>130){camera.position.z=130;}
-        else if(camera.position.z<=130&&camera.position.z>100){camera.position.z=100;}
-        else if(camera.position.z<=100&&camera.position.z>=70){camera.position.z=70;}
-    };
-    oimg[2].onclick = function() { 
-        //缩小按钮
-        if(camera.position.z<=220&&camera.position.z>=190){camera.position.z=220;}
-        else if(camera.position.z<190&&camera.position.z>=160){camera.position.z=190;}
-        else if(camera.position.z<160&&camera.position.z>=130){camera.position.z=160;}
-        else if(camera.position.z<130&&camera.position.z>=100){camera.position.z=130;}
-        else if(camera.position.z<100&&camera.position.z>=70){camera.position.z=100;}
-                }
-    oimg[3].onclick = function(){
-        if(isJWD==0){
-            isJWD=1;
-        }
-        else if(isJWD==1){
-            isJWD=0;
-        }
-        alert("经度："+now_JWD.x+"纬度："+now_JWD.y+"juli::"+now_distance.x+"y"+now_distance.y);
-    };
-
-
-// <!-- 左下角控件添加事件end -->
-
-    //全局 mp3地址
-    var mp3list="";
     var position_jw="";
     var goto_orgName="";
     var goto_orgAddress="";
@@ -139,177 +147,6 @@ function showmes(e){
         return vector;
     }
 
-
-    // 场景
-    function initScene() {
-        scene = new THREE.Scene();
-    }
-
-    // 相机
-    function initCamera() {
-        // camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 2000);
-        camera.position.set(0, 0, 100);
-        // camera.position.set(0, 400, 600);
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
-    }
-
-    // 渲染器
-    function initRenderer() {
-        if (Detector.webgl) {
-            renderer = new THREE.WebGLRenderer({antialias: true});
-        } else {
-            renderer = new THREE.CanvasRenderer();
-        }
-        // renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        // renderer.setSize(document.body.clientWidth, document.body.clientHeight);
-        renderer.setClearColor(0x666666);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.body.appendChild(renderer.domElement);
-    }
-
-    // 初始化模型
-    function initContent() {
-
-
-        // model
-
-        var cubeGeometry = new THREE.BoxGeometry(266, 190, 0.1);
-        var cubeMaterial = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/map.png')} );
-        cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.position.set(0, 0, 0);
-        cube.rotation.y=0;
-        cube.name = "地图";
-        scene.add(cube);
-
-
-        var cubeGeometry1 = new THREE.BoxGeometry(10, 10, 0.1);
-        var cubeMaterial1 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/palace.png') } );
-
-        var cubeGeometry2 = new THREE.BoxGeometry(10, 10, 0.1);
-        var cubeMaterial2 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/hotel.png') } );
-
-        var cubeGeometry3 = new THREE.BoxGeometry(10, 10, 0.1);
-        var cubeMaterial3 =new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/restaurant.png') } );
-        
-        var cubeGeometry4 = new THREE.BoxGeometry(10, 10, 0.1);
-        var cubeMaterial4 = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/location.png') } );
-
-         var cubeGeometry5 = new THREE.BoxGeometry(10, 10, 0.1);
-        var cubeMaterial5 =new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('images/wc.jpg') } );
-
-        readTextFile("startPoint.json", function(text){  
-        var startPoint_data = JSON.parse(text); 
-        var t = startPoint_data[0].position.split(','); 
-        yuandian_JWD.x=t[0];
-        yuandian_JWD.y=t[1];
-        bili=Number(startPoint_data[1].bili);
-        var t2 = startPoint_data[2].xiangsu.split(','); 
-        cube.scale.x=t2[0]/266.0;
-        cube.scale.y=t2[1]/190.0;
-        console.log("cube.scale");
-        console.log(cube.scale);
-        readTextFile("palace.json", function(text){  
-            data_jingdian = JSON.parse(text); 
-            for (var i = 0; i < data_jingdian.length; i++) {
-                var t = data_jingdian[i].position.split(','); 
-                var positon_jw=data_jingdian[i].position;
-                var temp_pos3=new THREE.Vector3(0,0,-1);
-                var temp_pos2=new THREE.Vector2(0,0);
-                temp_pos2.x=getShortDistance(yuandian_JWD.x,yuandian_JWD.y,t[0],t[1]).x;
-                temp_pos2.y=getShortDistance(yuandian_JWD.x,yuandian_JWD.y,t[0],t[1]).y;
-                temp_pos3.x=temp_pos2.x*bili;
-                temp_pos3.y=temp_pos2.y*bili;
-                data_jingdian[i].position=temp_pos3;
-                data_jingdian[i].position_jw=positon_jw;
-            } 
-            for (var i = 0; i < data_jingdian.length; i++) {
-                switch(data_jingdian[i].what){
-                    case "1":
-                        jingdian_cube[i] = new THREE.Mesh(cubeGeometry1, cubeMaterial1);
-                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
-                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
-                        jingdian_cube[i].address=data_jingdian[i].address;
-                        jingdian_cube[i].cont=data_jingdian[i].cont;
-                        jingdian_cube[i].pic=data_jingdian[i].pic;
-                        jingdian_cube[i].position.x=data_jingdian[i].position.x;
-                        jingdian_cube[i].position.y=data_jingdian[i].position.y;
-                        jingdian_cube[i].position.z=data_jingdian[i].position.z;
-                        jingdian_cube[i].rotation.y=0;
-                        jingdian_cube[i].name = data_jingdian[i].name;
-                        jingdian_cube[i].what=1;
-                        scene.add(jingdian_cube[i]);
-                        break;
-                    case "2":
-                        jingdian_cube[i] = new THREE.Mesh(cubeGeometry2, cubeMaterial2);
-                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
-                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
-                        jingdian_cube[i].address=data_jingdian[i].address;
-                        jingdian_cube[i].cont=data_jingdian[i].cont;
-                        jingdian_cube[i].pic=data_jingdian[i].pic;
-                        jingdian_cube[i].position.x=data_jingdian[i].position.x;
-                        jingdian_cube[i].position.y=data_jingdian[i].position.y;
-                        jingdian_cube[i].position.z=data_jingdian[i].position.z;
-                        jingdian_cube[i].rotation.y=0;
-                        jingdian_cube[i].name = data_jingdian[i].name;
-                        jingdian_cube[i].what=2;
-                        scene.add(jingdian_cube[i]);
-                        break;
-                    case "3":
-                        jingdian_cube[i] = new THREE.Mesh(cubeGeometry3, cubeMaterial3);
-                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
-                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
-                        jingdian_cube[i].address=data_jingdian[i].address;
-                        jingdian_cube[i].cont=data_jingdian[i].cont;
-                        jingdian_cube[i].pic=data_jingdian[i].pic;
-                        jingdian_cube[i].position.x=data_jingdian[i].position.x;
-                        jingdian_cube[i].position.y=data_jingdian[i].position.y;
-                        jingdian_cube[i].position.z=data_jingdian[i].position.z;
-                        jingdian_cube[i].rotation.y=0;
-                        jingdian_cube[i].name = data_jingdian[i].name;
-                        jingdian_cube[i].what=3;
-                        scene.add(jingdian_cube[i]);
-                        break;
-                     case "4":
-                        jingdian_cube[i] = new THREE.Mesh(cubeGeometry5, cubeMaterial5);
-                        jingdian_cube[i].mp3=data_jingdian[i].mp3;
-                        jingdian_cube[i].position_jw=data_jingdian[i].position_jw;
-                        jingdian_cube[i].address=data_jingdian[i].address;
-                        jingdian_cube[i].cont=data_jingdian[i].cont;
-                        jingdian_cube[i].pic=data_jingdian[i].pic;
-                        jingdian_cube[i].position.x=data_jingdian[i].position.x;
-                        jingdian_cube[i].position.y=data_jingdian[i].position.y;
-                        jingdian_cube[i].position.z=data_jingdian[i].position.z;
-                        jingdian_cube[i].rotation.y=0;
-                        jingdian_cube[i].name = data_jingdian[i].name;
-                        jingdian_cube[i].what=4;
-                        scene.add(jingdian_cube[i]);
-                        break;
-                }
-            }
-
-
-            pos_jingdian_cube_length=jingdian_cube.length;
-            jingdian_cube[pos_jingdian_cube_length] = new THREE.Mesh(cubeGeometry4, cubeMaterial4);
-            jingdian_cube[pos_jingdian_cube_length].position.set(999,999,1);
-            jingdian_cube[pos_jingdian_cube_length].rotation.y=0;
-            jingdian_cube[pos_jingdian_cube_length].name = "位置";
-            jingdian_cube[pos_jingdian_cube_length].what=0;
-            scene.add(jingdian_cube[pos_jingdian_cube_length]);
-
-            jingdian_cube[pos_jingdian_cube_length+1] = new THREE.Mesh(cubeGeometry4, cubeMaterial4);
-            jingdian_cube[pos_jingdian_cube_length+1].position.set(0,0,-1);
-            jingdian_cube[pos_jingdian_cube_length+1].rotation.y=0;
-            jingdian_cube[pos_jingdian_cube_length+1].name = "位置参照";
-            jingdian_cube[pos_jingdian_cube_length+1].what=-1;
-            scene.add(jingdian_cube[pos_jingdian_cube_length+1]);
-            isJWD=0;
-        }); 
-    }); 
-        
-    }
-    console.log(jingdian_cube);
 
     // 鼠标双击触发的方法
     function onMouseDblclick(event) {

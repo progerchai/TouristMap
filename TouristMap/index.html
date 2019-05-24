@@ -12,9 +12,9 @@
     <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="./css/main.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="js/canvasdomain.js"></script>
-    <script type="text/javascript" src="js/others.js"></script>
+    <script type="text/javascript" src="js/jsondomain.js"></script>
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=您申请的key值"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14"></script>
 
 </head>
 <body id="body">
@@ -32,10 +32,10 @@
 
 <div class="left_img">
     <ul>
-        <li><div class="img"><img src="images/vetorgram/list.png"></div></li>
-        <li id="fangda"><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
-        <li id="suoxiao"><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
-        <li id="dingwei" onclick="readTextFile('json/palace.json')"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
+        <li id="liebiao" onclick="showLieBiao()"><div class="img"><img src="images/vetorgram/list.png"></div></li>
+        <li id="fangda" onclick="fangda()"><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
+        <li id="suoxiao" onclick="suoxiao()"><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
+        <li id="dingwei"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
     </ul>   
 </div>
 <!-- 添加左下角标签end -->
@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="pop-foot">
-        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" />
+        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" onclick="autoPlay()" />
         <input type="button" value="导航" class="gotoNav" id="gotoNav" onclick="gotoMap()" />
     </div>
 </div>
@@ -89,14 +89,30 @@
 <audio id="myaudio" src="mp3/test1.mp3" controls="controls" loop="false" hidden="true" >
 </audio>
 <!-- 播放MP3end -->
-
+<!-- 用来append 图片对象 -->
+<div id="imglist" style="z-index: 1;"></div>
 <!-- canvas层 -->
-<canvas id='canvas'>您的浏览器不支持cnavas</canvas>
+<canvas id='canvas'>您的浏览器不支持canvas</canvas>
 
-<!-- <button type="button" onclick="swip()">向左边移动</button> -->
 <script type="text/javascript">
-// 判断是否是微信端访问，若不是则拒绝访问
+var DEF_C = 40075020;//地球赤道位置周长
+var mp3list = "mp3/test1.mp3";
+    //初始化画布
+(function int(){
+    canvas=document.getElementById('canvas');
+    context=canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+    loadImg();
+})();
+//获取json数据，方便之后使用
+(function init_JsonData(){
+    // 判断是否是微信端访问，若不是则拒绝访问
     // judgeview();
+    readTextFile('json/startPoint.json');
+    readTextFile('json/palace.json');
+})();
+
 
 //计算经纬度两点之间的距离
 function computeDis(lon1, lat1, lon2, lat2){
@@ -145,24 +161,9 @@ console.log("两点相对距离为："+dis.dis_x+" "+dis.dis_y);
 
 
 //39.94607,116.32793  31.24063,121.42575
-var dis = computeDis(116.32793 ,39.94607,121.42575,31.24063);
-console.log("两点距离为："+computeDis(116.697878,39.916243,120.709744,27.916243));
+// var dis = computeDis(116.32793 ,39.94607,121.42575,31.24063);
+// console.log("两点距离为："+computeDis(116.697878,39.916243,120.709744,27.916243));
 
-    //初始化画布
-(function int(){
-    canvas=document.getElementById('canvas');
-    context=canvas.getContext('2d');
-    canvas.width = width;
-    canvas.height = height;
-    loadImg();
-})();
-//按钮类型缩放功能
-$("#fangda").bind("click",function(){
-    scale(width/2,height/2,100);
-});
-$("#suoxiao").bind("click",function(){
-    scale(width/2,height/2,-100);
-});
 //阻止底层body滑动
 $("canvas").on("touchstart", function(e) {
     e.preventDefault();
@@ -189,9 +190,9 @@ $("#canvas").bind("touchmove",function(e){
             // alert("单指操作");
 
 
-            // 图片移动范围约束,待完善
-            if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width||imgY+y<window.screen.availHeight-img.height)
-                return 0;
+            // // 图片移动范围约束,待完善
+            // if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width||imgY+y<window.screen.availHeight-img.height)
+            //     return 0;
 
             pos=pos1;
             imgX+=x;

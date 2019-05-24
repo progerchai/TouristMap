@@ -39,14 +39,12 @@ function scale(dre_x,dre_y,delta){
     }
     drawImage();
 }
-
-function windowToCanvas(canvass,x,y){
+//得到图片距离canvas的左上角初始点的像素坐标
+function windowToCanvas(canvas,x,y){
     var bbox = canvas.getBoundingClientRect();
     return {
-        x:x - bbox.left - (bbox.width - canvass.width) / 2,
-        y:y - bbox.top - (bbox.height - canvass.height) / 2
-        // x:bbox.left,
-        // y:bbox.top
+        x:x - bbox.left,
+        y:y - bbox.top
     };
 }
 // 重绘图片

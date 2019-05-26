@@ -16,7 +16,7 @@ function readTextFile(file) {
                 }
             }
 }   
-//回调函数， 获取两个json文件的数据
+//回调函数，获取两个json文件的数据
 function store(){
     if(flag==0)
        {

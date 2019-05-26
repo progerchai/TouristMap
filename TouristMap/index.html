@@ -21,10 +21,10 @@
 
     <div class="sideBox">
       <ul class="nav">
-        <li><a id="jingdian">景点</a></li>
-        <li><a id="zhusu">住宿</a></li>
-        <li><a id="canyin">餐饮</a></li>
-        <li><a id="cesuo">厕所</a></li>
+        <li><a id="jingdian" value="1" onclick="changeType(1)">景点</a></li>
+        <li><a id="zhusu" value="2" onclick="changeType(2)">住宿</a></li>
+        <li><a id="canyin" value="3" onclick="changeType(3)">餐饮</a></li>
+        <li><a id="cesuo" value="4" onclick="changeType(4)">厕所</a></li>
       </ul>
     </div>
 
@@ -67,16 +67,16 @@
 </div>
 <!-- 添加弹出框div end -->
 <!-- 添加弹出介绍div -->
-<div class="intr" id="intr" style="display: none;">
+<div class="intr" id="intr" style="display: block;position: absolute;top: 150px;left: 90px;">
    <div class="intr-top">
-        <div class="left"><span id="intr_title"></span></div>
+        <div class="left"><span id="intr_title">span测试内容</span></div>
         <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
         <!-- 修改为 icon图标 -->
    </div>
    <div class="intr-body">
        <div class="body_img"><img id="intr_img"></div>
         <div class="bodyright">
-            <div class="text"><p id="intr_content"></p></div>
+            <div class="text"><p id="intr_content">span测试内容</p></div>
             <div class="intr-foot">
                 <button class="btn" id="speak" onclick="autoPlay()">语音</button>
                 <button class="btn" id="goto" onclick="gotoMap()">导航</button>
@@ -90,13 +90,15 @@
 </audio>
 <!-- 播放MP3end -->
 <!-- 用来append 图片对象 -->
-<div id="imglist" style="z-index: 1;"></div>
+<div id="imglist" style="z-index: 1;overflow:hidden;"></div>
+<!-- <button onclick="putIcons(40,40,50,50,'images/hotel.png')" style="z-index: 1;position: absolute;top: 100px;left: 100px;">点击触发icon</button> -->
 <!-- canvas层 -->
 <canvas id='canvas'>您的浏览器不支持canvas</canvas>
-
 <script type="text/javascript">
 var DEF_C = 40075020;//地球赤道位置周长
 var mp3list = "mp3/test1.mp3";
+var type =1;//判断景点类型
+var iconNum = 0,iconNum1 = 0;//用来确定是那个icon图标被点击
     //初始化画布
 (function int(){
     canvas=document.getElementById('canvas');
@@ -108,10 +110,16 @@ var mp3list = "mp3/test1.mp3";
 //获取json数据，方便之后使用
 (function init_JsonData(){
     // 判断是否是微信端访问，若不是则拒绝访问
-    // judgeview();
-    readTextFile('json/startPoint.json');
+    // judgeview();    
     readTextFile('json/palace.json');
+    readTextFile('json/startPoint.json');
 })();
+
+
+function changeType(num){
+    what = num;
+    putIcons(what);
+}
 
 
 //计算经纬度两点之间的距离
@@ -127,37 +135,7 @@ function computeDis(lon1, lat1, lon2, lat2){
     var distance = Math.round(p1.distance(p2));
    return distance;
 }
-//经纬度计算方位角。lon1(经度),lat1(纬度)为标准
-function getazimuth(lon1, lat1, lon2, lat2){
-    // var Aj=121.53721,Aw=29.829484,Bj=121.549777,Bw=29.832009;
-    // var Aj=lon1,Aw=lat1,Bj=lon2,Bw=lat2;
-    // var Aj=113.14,Aw=23.08,Bj=110.47,Bw=21.26;
-// 方位角方法1
-    // var cos=Math.cos(90-Bw)*Math.cos(90-Aw)+Math.sin(90-Bw)*Math.sin(90-Aw)*Math.cos(Bj-Aj)
-    // var sin =Math.sqrt(1-Math.pow(cos,2));
-    // var azimuth = Math.asin((Math.sin(90-Bw)*Math.sin(Bj-Aj))/sin)*180/Math.PI;
-    // return azimuth;
 
-// 方位角方法2
-    // var tgAAA=(Math.cos(Bw)*Math.sin(Bj-Aj))/(Math.sin(Bw)*Math.cos(Aw)-Math.cos(Bw)*Math.sin(Aw)*Math.cos(Bj-Aj));
-    // var azimuth = Math.atan(tgAAA)*180/Math.PI;
-    // return azimuth;
-
-// 计算不同维度的地球半径进行勾股计算
-    var earthradio = DEF_C * Math.cos(lat1);
-    var per_lon_dis = earthradio/360;
-    var dis_x =(lon2 - lon1) * per_lon_dis;
-    var distance = computeDis(lon1, lat1, lon2, lat2);
-    var dis_y = Math.sqrt(Math.abs(Math.pow(distance,2)- Math.pow(dis_x,2)));//计算出来是绝对正值，要进行对比
-    if(lat1<lat2)
-        dis_y = -dis_y;
-    return {
-        dis_x:dis_x,
-        dis_y:dis_y
-    }
-}
-var dis = getazimuth(120.697878,27.915796,120.709744,27.916243);
-console.log("两点相对距离为："+dis.dis_x+" "+dis.dis_y);
 
 
 //39.94607,116.32793  31.24063,121.42575
@@ -198,6 +176,9 @@ $("#canvas").bind("touchmove",function(e){
             imgX+=x;
             imgY+=y;
             drawImage();
+            // putIcons(20,20,50,50,"images/hotel.png");
+    //         alert("MES:"+imgX+" "+img.width/2+" "+imgY+" "+img.height/2);
+    // putIcons(imgX+img.width/2*imgScale,imgY+img.height/2*imgScale,50,50,"images/hotel.png");
         }
     // 约束双指操作,调用缩放函数
     if(e.originalEvent.targetTouches.length == 2)
@@ -218,7 +199,10 @@ $("#canvas").bind("touchmove",function(e){
                 delta = -120;
             
         }
-
+//地图中心原点坐标
+// putOneIcon(imgX+img.width/2*imgScale,imgY+img.height/2*imgScale,50,50,"images/hotel.png");
+    putIcons(what);
+        // alert("MES:"+(imgX+img.width/2*imgScale)+" * "+(img.height/2*imgScale));
     });
 
 $("#canvas").bind("touchend",function(e){
@@ -235,9 +219,11 @@ $("#canvas").bind("touchend",function(e){
     distance = false;
     dis_move = 0;
     delta = 0;
+    putIcons(what);
 });
 
 </script>
-<script type="text/javascript" src="js/func.js"></script>
+    <script type="text/javascript" src="js/func.js"></script>
+
 </body>
 </html>

@@ -13,7 +13,8 @@ var height = window.screen.availHeight;
 
 function loadImg(){
     img=new Image();
-    img.src="https://www.ffgbookbar.cn/map/images/map.png";
+    // img.src="https://www.ffgbookbar.cn/TouristMap/images/map.jpg";
+    img.src="https://www.sskstudio.cn/map.jpg";
     img.onload=function(){
         imgX = -img.width/2;
         imgY = -img.height/2;
@@ -24,18 +25,44 @@ function loadImg(){
 //图片缩放,传入双指中心点坐标,delta判断进行放大还是缩小操作
 function scale(dre_x,dre_y,delta){
     var pos_temp=windowToCanvas(canvas,dre_x,dre_y);
-    if(delta>0){
+    if(delta>0)
         imgScale*=2;
+    else if(delta<0)
+        imgScale/=2;
+// 缩放约束
+    // if(imgX+pos_temp.x > 0||imgY+pos_temp.y>0||imgX+pos_temp.x<window.screen.availWidth-img.width*imgScale||imgY+pos_temp.y<window.screen.availHeight-img.height*imgScale)
+    //             return 0;
+    // alert(img.height*imgScale+"<?"+window.innerHeight);
+    if(img.height*imgScale<window.innerHeight)
+    {
+                delta = 0;
+        putIcons(what);
+        return 0;
+    }
+    else{
+        if(imgScale<0.125)
+    {
+        alert("不能继续缩小了哦！");
+        return 0;
+    }
+    if(imgScale>8)
+    {
+        alert("不能继续放大了哦！");
+        return 0;
+    }
+    if(delta>0){
         imgX=imgX*2-pos_temp.x;
         imgY=imgY*2-pos_temp.y;
     }
     else if(delta<0){
-        imgScale/=2;
         imgX=imgX*0.5+pos_temp.x*0.5;
         imgY=imgY*0.5+pos_temp.y*0.5;
     }
+            delta = 0;
     drawImage();
     putIcons(what);
+    };
+
 }
 //得到图片距离canvas的左上角初始点的像素坐标
 function windowToCanvas(canvas,x,y){

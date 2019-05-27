@@ -1,11 +1,12 @@
-[{
+[
+    {
     "what": "1",
     "position": "120.709744,27.916243",
     "name": "景点1",
     "address":"我是景点1的具体地址信息",
     "cont": "介绍文字",
     "mp3": "https://www.ffgbookbar.cn/map/mp3/test1.mp3",
-    "pic": "images/intr.jpg"
+    "pic": "images/intr.jpg" 
 }, {
     "what": "1",
     "position": "120.683456,27.912222",
@@ -37,7 +38,7 @@
     "address":"我是住宿1具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/hotel.png"
 }, {
     "what": "2",
     "position": "120.690000,27.910000",
@@ -45,7 +46,7 @@
     "address":"我是住宿2具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/hotel.png"
 }, {
     "what": "2",
     "position": "120.682397,27.9157400",
@@ -53,7 +54,7 @@
     "address":"我是住宿3具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/hotel.png"
 }, {
     "what": "3",
     "position": "120.67989,27.910000",
@@ -61,7 +62,7 @@
     "address":"我是餐饮1具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/restaurant.png"
 }, {
     "what": "3",
     "position": "120.696534,27.911654",
@@ -69,7 +70,7 @@
     "address":"我是餐饮2具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/restaurant.png"
 }, {
     "what": "3",
     "position": "120.709744,27.916243",
@@ -77,7 +78,7 @@
     "address":"我是餐饮3具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/restaurant.png"
 }, {
     "what": "4",
     "position": "120.709744,27.916243",
@@ -85,7 +86,7 @@
     "address":"我是厕所1具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/cesuo.png"
 }, {
     "what": "4",
     "position": "120.709744,27.916243",
@@ -93,7 +94,7 @@
     "address":"我是厕所2具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/cesuo.png"
 }, {
     "what": "4",
     "position": "120.709744,27.916243",
@@ -101,7 +102,7 @@
     "address":"我是厕所3具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/cesuo.png"
 }, {
     "what": "4",
     "position": "120.709744,27.916243",
@@ -109,6 +110,6 @@
     "address":"我是厕所4具体地址信息",
     "cont": "介绍文字",
     "mp3": "解说文件",
-    "pic": "images/intr.jpg"
+    "pic": "images/cesuo.png"
 }
 ]

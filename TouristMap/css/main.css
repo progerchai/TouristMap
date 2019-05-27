@@ -144,8 +144,8 @@ height:40px;*/
     filter:alpha(opacity=70);
     opacity:0.85;
     position:absolute;
-    width: 50%;
-    height: 12%; 
+    width: 70%;
+    height: 24%; 
     /*display: flex;
     flex-direction: row;*/
 }
@@ -188,8 +188,10 @@ height:40px;*/
 }
 .bodyright .text{
     line-height: 12px;
-    font-size: 2px;
     height: 30%;
+}
+.intr_content{
+    font-size: 12pt;
 }
 .btn { 
     display: block; 

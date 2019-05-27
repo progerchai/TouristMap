@@ -67,7 +67,7 @@
 </div>
 <!-- 添加弹出框div end -->
 <!-- 添加弹出介绍div -->
-<div class="intr" id="intr" style="display: block;position: absolute;top: 150px;left: 90px;">
+<div class="intr" id="intr" style="display: none;z-index:2;">
    <div class="intr-top">
         <div class="left"><span id="intr_title">span测试内容</span></div>
         <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
@@ -78,8 +78,8 @@
         <div class="bodyright">
             <div class="text"><p id="intr_content">span测试内容</p></div>
             <div class="intr-foot">
-                <button class="btn" id="speak" onclick="autoPlay()">语音</button>
-                <button class="btn" id="goto" onclick="gotoMap()">导航</button>
+                <button class="btn" id="speak" onclick="autoPlay()" style="width: 50%;height: 60%;">语音</button>
+                <button class="btn" id="goto" onclick="gotoMap()" style="width: 50%;height: 60%;">导航</button>
             </div>
         </div>
    </div>
@@ -95,6 +95,7 @@
 <!-- canvas层 -->
 <canvas id='canvas'>您的浏览器不支持canvas</canvas>
 <script type="text/javascript">
+var twoFigers = false;
 var DEF_C = 40075020;//地球赤道位置周长
 var mp3list = "mp3/test1.mp3";
 var type =1;//判断景点类型
@@ -159,30 +160,47 @@ $("#canvas").bind("touchmove",function(e){
     // 约束单指操作，移动图片
     if(e.originalEvent.targetTouches.length == 1)
         {
+            twoFigers = false;
             canvas.style.cursor="move";
             pos1=windowToCanvas(canvas,e.originalEvent.targetTouches[0].pageX,e.originalEvent.targetTouches[0].pageY);
             var x=pos1.x-pos.x;
             var y=pos1.y-pos.y;
-            // console.log(x,y);
-            // console.log("imgx,imgy",imgX,imgY);
-            // alert("单指操作");
-
-
             // // 图片移动范围约束,待完善
-            // if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width||imgY+y<window.screen.availHeight-img.height)
+            // if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width*imgScale||imgY+y<window.screen.availHeight-img.height*imgScale)
             //     return 0;
+            // 图片左右约束
+            if(e.originalEvent.targetTouches[0].pageX<imgX||e.originalEvent.targetTouches[0].pageX>imgX+img.width*imgScale)
+                return 0;
+            // 图片上下约束
+            if(e.originalEvent.targetTouches[0].pageY<imgY||e.originalEvent.targetTouches[0].pageY>imgY+img.height*imgScale)
+                return 0;
 
             pos=pos1;
             imgX+=x;
             imgY+=y;
             drawImage();
-            // putIcons(20,20,50,50,"images/hotel.png");
-    //         alert("MES:"+imgX+" "+img.width/2+" "+imgY+" "+img.height/2);
-    // putIcons(imgX+img.width/2*imgScale,imgY+img.height/2*imgScale,50,50,"images/hotel.png");
+            // var judge = false;
+            // while(!judge){
+            // if(imgX>0||imgY>0||imgX+img.width*imgScale<width||imgY+img.height*imgScale<height)
+            // {
+            //     if(imgX>0)
+            //         imgX=0;
+            //     if(imgY>0)
+            //         imgY=0;
+            //     // if(imgX+img.width<width)
+            //     //     imgX=-img.width*imgScale;
+            //     // if(imgY+img.height<height)
+            //     //     imgY=-img.height*imgScale;
+            //     drawImage();
+            // }
+            // else
+            //     judge = true;
+            // }
         }
     // 约束双指操作,调用缩放函数
     if(e.originalEvent.targetTouches.length == 2)
         {   
+            twoFigers = true;
             //若start初始状态没有两个手指点坐标，则设有两个手指坐标的瞬间作为dis_std的初始状态
             if(!distance)
             {
@@ -198,6 +216,7 @@ $("#canvas").bind("touchmove",function(e){
             else if(dis_move < dis_std)
                 delta = -120;
             
+            
         }
 //地图中心原点坐标
 // putOneIcon(imgX+img.width/2*imgScale,imgY+img.height/2*imgScale,50,50,"images/hotel.png");
@@ -208,7 +227,7 @@ $("#canvas").bind("touchmove",function(e){
 $("#canvas").bind("touchend",function(e){
     //弹出数据检查
     // alert("数据：distance="+distance+"；dis_std:"+dis_std+"；dis_move:"+dis_move+"；位移差值："+Math.abs(dis_move - dis_std)+";delta"+delta);
-    if(delta!=0 && Math.abs(dis_move - dis_std)>30)
+    if(delta!=0 && Math.abs(dis_move - dis_std)> 30 && twoFigers)
             {
                 scale(pageX/2,pageY/2,delta);
             }
@@ -219,9 +238,28 @@ $("#canvas").bind("touchend",function(e){
     distance = false;
     dis_move = 0;
     delta = 0;
-    putIcons(what);
+    twoFigers = false;
 });
-
+render();
+    function render() {
+        if(imgX>0){
+            imgX -=10;
+            drawImage();
+        }
+        if(imgY>0){
+            imgY-=10;
+            drawImage();
+        }
+        if(imgY+img.height*imgScale<window.innerHeight){
+            imgY+=10;
+            drawImage();
+        }
+        if(imgX+img.width*imgScale<window.innerWidth){
+            imgX+=10;
+            drawImage();
+        }
+        requestAnimationFrame(render);
+    }
 </script>
     <script type="text/javascript" src="js/func.js"></script>
 

@@ -1,8 +1,8 @@
 var opop = document.getElementById("pop");
 var closedone = document.getElementById("closedone");
 var intr = document.getElementById("intr");
-
-
+var timer = 0;//用来icon图片绑定事件 计数
+var timerList = [];
 // 禁止除微信端访问
 function judgeview(){
         // 对浏览器的UserAgent进行正则匹配，不含有微信独有标识的则为其他浏览器
@@ -21,10 +21,10 @@ function judgeview(){
         opened.close();
     }
 }
-//链接到百度地图
+//链接到百度地图，现阶段默认地址,无参数传递
 function gotoMap(){
     //获取目标地点的相关信息，不用获取本地相关信息
-    var position = position_jw.split(",");
+    // var position = position_jw.split(",");
     var goto_lon=120.69477;//目标地点经度
     var goto_lat=27.92325;//目标地点纬度
     var goto_orgName = "温州大学";
@@ -66,10 +66,17 @@ function putOneIcon(x,y,img_width,img_height,url){
     img.style.left = x +"px";
     img.style.top = y+"px";
     img.name = "iconImage";
+    img.value = timer;
+    //为图片增加事件
+    img.addEventListener("click",function(e){
+        showIntroduce(this.value,what,x,y);
+    });
     imglist.appendChild(img);
+    timer++;
     // alert(palace.length);
 }
 function putIcons(what){
+    timer = 0;
      document.getElementById("imglist").innerHTML="";//清空上一步存放的所有img对象
      var startPoint_JD = parseFloat(startPoint[0].position.split(",")[0]);
      var startPoint_wD = parseFloat(startPoint[0].position.split(",")[1]);
@@ -83,10 +90,10 @@ function putIcons(what){
              iconUrl = "images/hotel.png";
              break;
             case 3:
-             iconUrl = "images/cesuo.png";
+             iconUrl = "images/restaurant.png";
              break;
             case 4:
-             iconUrl = "images/restaurant.png";
+             iconUrl = "images/cesuo.png";
              break;
         }
     //调用数次putOneIcon函数，对所有图片icon进行前端展示
@@ -99,7 +106,6 @@ function putIcons(what){
 
             putOneIcon(imgX+(img.width/2+dis.dis_x/20)*imgScale,imgY+(img.height/2+dis.dis_y/20)*imgScale,50,50,iconUrl);
         }
-        putOneIcon();
     }
 }
 //展示列表box
@@ -120,21 +126,30 @@ function fangda(){
 function suoxiao(){
      scale(width/2,height/2,-100);
 }
-//为新增的图片，绑定事件
-function addFunction(){
-    var allImages = document.getElementsByTagName("img");
-    for(var i = 0;i <allImages.length;i++)
-    {
-        allImages[i].onclick = function(){
-            showIntroduce(i,what);
-        };
+// flow为表示第几张图片,intr_x,intr_y为手指点击点的坐标
+function showIntroduce(flow,what,intr_x,intr_y){
+    // alert(flow);
+    var flag = 0;
+    for (var i = 0; i < palace.length ; i++) {
+        if(palace[i].what == what)
+        {
+            if(flag == flow)
+                {
+                    // 将palace对应的数据存放起来
+                    document.getElementById("intr_title").innerHTML=palace[i].name;
+                    document.getElementById("intr_content").innerHTML=palace[i].cont;
+                    var image= document.getElementById("intr_img");
+                    image.src=palace[i].pic;
+                    image.style.width = 80 +"px";
+                    image.style.height = 80 +"px";
+                    showmes(intr_x,intr_y);
+                    return 0;
+                }
+            else flag++;
+        }
     }
 }
-//flow为表示第几张图片
-// function showIntroduce(flow,what){
-//     showmes();
-// }
-//图片切换接口预留
+// 图片切换接口预留
 // function imgchange(){
 //     var intr_img = document.getElementById('intr_img');
 //     intr_img.src=imglist+"";
@@ -142,25 +157,29 @@ function addFunction(){
 function close_intr(){
     intr.style.display="none";
     autoPause();
-
 }
-function showmes(e){
+function showmes(intr_x,intr_y){
+    intr.style.top = 140+"px";
+    intr.style.left = 100+"px";
+    var intr_content = document.getElementById("intr_content");
+    intr_content.style.fontSize = 12 +"pt";
     intr.style.display="block";
-    var x = e.clientX;
-    var y = e.clientY;
-    if(y < height/2)
-    {
-        intr.style.left=x - width/2.7  +'px';
-        intr.style.top=y + height/20 +'px';
-    }
-    else
-    { 
-        intr.style.left=x - width/2.7 +'px';
-        intr.style.top=y -height/4 +'px';
-    }
+    // alert(intr_x+" * "+intr_y);
+    // var x = e.clientX;
+    // var y = e.clientY;
+    // if(y < height/2)
+    // {
+    //     intr.style.left=x - width/2.7  +'px';
+    //     intr.style.top=y + height/20 +'px';
+    // }
+    // else
+    // { 
+    //     intr.style.left=x - width/2.7 +'px';
+    //     intr.style.top=y -height/4 +'px';
+    // }
 
-    intr.style.height=height/5.5+'px';
-    intr.style.width=width/1.5+'px';
+    // intr.style.height=height/5.5+'px';
+    // intr.style.width=width/1.5+'px';
 }
 
 closedone.onclick = function(){

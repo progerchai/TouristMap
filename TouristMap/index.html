@@ -8,61 +8,65 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>map</title>
-    
     <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="./css/main.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="js/canvasdomain.js"></script>
     <script type="text/javascript" src="js/jsondomain.js"></script>
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" type="text/javascript"></script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14"></script>
-
 </head>
 <body id="body">
 
-    <div class="sideBox">
-      <ul class="nav">
-        <li><a id="jingdian" value="1" onclick="changeType(1)">景点</a></li>
-        <li><a id="zhusu" value="2" onclick="changeType(2)">住宿</a></li>
-        <li><a id="canyin" value="3" onclick="changeType(3)">餐饮</a></li>
-        <li><a id="cesuo" value="4" onclick="changeType(4)">厕所</a></li>
-      </ul>
+    <div class="sideBox" id="sideBox" style="background-color:rgba(247,131,97,0.7);" >
+        <a id="jingdian" value="1" onclick="changeType(1)">景点</a>
+        <a id="zhusu" value="2" onclick="changeType(2)">住宿</a>
+        <a id="canyin" value="3" onclick="changeType(3)">餐饮</a>
+        <a id="cesuo" value="4" onclick="changeType(4)">厕所</a>
     </div>
 
 <!-- 添加左下角标签 -->
 
 <div class="left_img">
     <ul>
-        <li id="liebiao" onclick="showLieBiao()"><div class="img"><img src="images/vetorgram/list.png"></div></li>
+        <li id="liebiao" onclick="liebiao()"><div class="img"><img src="images/vetorgram/list.png"></div></li>
         <li id="fangda" onclick="fangda()"><div class="img"><img src="images/vetorgram/fangda.png"></div></li>
         <li id="suoxiao" onclick="suoxiao()"><div class="img"><img src="images/vetorgram/suoxiao.png"></div></li>
-        <li id="dingwei"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
+        <li id="dingwei" onclick="restore()"><div class="img"><img src="images/vetorgram/dingwei.png"></div></li>
     </ul>   
 </div>
 <!-- 添加左下角标签end -->
 <!-- 添加弹出框div -->
-<div class="pop" id="pop" style="display: none;">
-    <div class="pop-top" id="pop-top">
-     <div class="toplft" style="width: 200px;"><p>景区列表</p></div>
-      <div class="toplft" style="width: 200px;"><span class="pop-close" id="closedone"><i class="iconfont icon-cuowu"></i></span></div>
-    </div>
-    <div class="pop-content" id="pop-content">
-        <div class="pop-content-right">
-            <p><a href="#">百丈漈</a><b class="lname"></b></p>
-            <p><a href="#">铜铃山</a><b class="price"></b></p>
-            <p><a href="#">月老山</a><b class="ltime"></b></p>
-            <p><a href="#">猴王谷</a><b class="synopsis"></b></p>
-            <p><a href="#">安福寺</a><b class="synopsis"></b></p>
-            <p><a href="#">刘基故里</a><b class="teasynopsis"></b></p>
-            <p><a href="#">朱阳九峰</a><b class="synopsis"></b></p>   
-            <p><a href="#">峡谷景廊</a><b class="synopsis"></b></p>
-            <p><a href="#">岩门大峡谷</a><b class="teacher"></b></p>     
-            <p><a href="#">九溪欢乐谷</a><b class="synopsis"></b></p>   
-            <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
+<div id="wrap" style="display: none;">
+    <div class="popup">
+        <div class="mask" :class="{'maskpop':isShow}" @click="pophide"></div>
+        <div class="content" :class="{'trans':isShow}" style="z-index: 10;">
+
+            <div class="pop" id="pop" style="display: none;overflow-y:scroll;height:300px;">
+
+                <div class="pop-top" id="pop-top">
+                  <div class="topleft" style="font-size: 15pt;margin-left: 5%;"><p>景区列表</p></div>
+                  <div class="topleft" style="margin-left: 65%;"><span class="pop-close" id="closedone"><i class="iconfont icon-cuowu" @click="pophide"></i></span>
+                  </div>
+                </div>
+
+                <div class="pop-content" id="pop-content"> 
+                    <div class="pop-content-right">
+                        <p><a href="#">百丈漈</a></p>
+                        <p><a href="#">铜铃山</a></p>
+                        <p><a href="#">月老山</a></p>
+                        <p><a href="#">猴王谷</a></p>
+                        <p><a href="#">安福寺</a></p>
+                        <p><a href="#">刘基故里</a></p>
+                        <p><a href="#">朱阳九峰</a></p>   
+                        <p><a href="#">峡谷景廊</a></p>
+                        <p><a href="#">岩门大峡谷</a></p>     
+                        <p><a href="#">九溪欢乐谷</a></p>   
+                        <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="pop-foot">
-        <input type="button" value="VR实景" class="gotoVR" id="gotoVR" onclick="autoPlay()" />
-        <input type="button" value="导航" class="gotoNav" id="gotoNav" onclick="gotoMap()" />
     </div>
 </div>
 <!-- 添加弹出框div end -->
@@ -91,15 +95,37 @@
 <!-- 播放MP3end -->
 <!-- 用来append 图片对象 -->
 <div id="imglist" style="z-index: 1;overflow:hidden;"></div>
-<!-- <button onclick="putIcons(40,40,50,50,'images/hotel.png')" style="z-index: 1;position: absolute;top: 100px;left: 100px;">点击触发icon</button> -->
 <!-- canvas层 -->
-<canvas id='canvas'>您的浏览器不支持canvas</canvas>
+<canvas id='canvas' style="z-index: 1;">您的浏览器不支持canvas</canvas>
+<!-- <div style="width: 375px;height: 60px;position: absolute;left: 0px;top: 0px;background-color:rgba(247,131,97,0.4);"></div> -->
+
 <script type="text/javascript">
 var twoFigers = false;
 var DEF_C = 40075020;//地球赤道位置周长
 var mp3list = "mp3/test1.mp3";
 var type =1;//判断景点类型
 var iconNum = 0,iconNum1 = 0;//用来确定是那个icon图标被点击
+    var vm = new Vue({
+    el:"#wrap",
+    data:{
+    isShow:false
+},
+
+methods:{
+    popup:function () {
+    this.isShow = true;
+    document.getElementById("pop").style.display = "block";
+    console.log(1);
+    },
+
+    pophide:function () {
+    this.isShow = false;
+    document.getElementById("pop").style.display = "none";
+    console.log(2);
+    }
+}
+
+});
     //初始化画布
 (function int(){
     canvas=document.getElementById('canvas');
@@ -116,13 +142,15 @@ var iconNum = 0,iconNum1 = 0;//用来确定是那个icon图标被点击
     readTextFile('json/startPoint.json');
 })();
 
-
 function changeType(num){
     what = num;
     putIcons(what);
 }
 
-
+function liebiao(){
+    document.getElementById("wrap").style.display = "block";
+    vm.popup();
+}
 //计算经纬度两点之间的距离
 function computeDis(lon1, lat1, lon2, lat2){
     var m1 = new AMap.Marker({
@@ -139,10 +167,6 @@ function computeDis(lon1, lat1, lon2, lat2){
 
 
 
-//39.94607,116.32793  31.24063,121.42575
-// var dis = computeDis(116.32793 ,39.94607,121.42575,31.24063);
-// console.log("两点距离为："+computeDis(116.697878,39.916243,120.709744,27.916243));
-
 //阻止底层body滑动
 $("canvas").on("touchstart", function(e) {
     e.preventDefault();
@@ -152,7 +176,7 @@ $("#canvas").bind("touchstart",function(e){
     console.log("start");
     pos = windowToCanvas(canvas,event.changedTouches[0].pageX,event.changedTouches[0].pageY);
     console.log(event.changedTouches[0].pageX);
-    // dis_std = Math.sqrt(Math.pow(( event.changedTouches[0].pageX - event.changedTouches[1].pageX),2) + Math.pow((event.changedTouches[0].pageY - event.changedTouches[1].pageY),2));
+
     if(e.changedTouches.length != 1)
         distance = true;
 });
@@ -165,9 +189,7 @@ $("#canvas").bind("touchmove",function(e){
             pos1=windowToCanvas(canvas,e.originalEvent.targetTouches[0].pageX,e.originalEvent.targetTouches[0].pageY);
             var x=pos1.x-pos.x;
             var y=pos1.y-pos.y;
-            // // 图片移动范围约束,待完善
-            // if(imgX+x > 0||imgY+y>0||imgX+x<window.screen.availWidth-img.width*imgScale||imgY+y<window.screen.availHeight-img.height*imgScale)
-            //     return 0;
+
             // 图片左右约束
             if(e.originalEvent.targetTouches[0].pageX<imgX||e.originalEvent.targetTouches[0].pageX>imgX+img.width*imgScale)
                 return 0;
@@ -179,23 +201,7 @@ $("#canvas").bind("touchmove",function(e){
             imgX+=x;
             imgY+=y;
             drawImage();
-            // var judge = false;
-            // while(!judge){
-            // if(imgX>0||imgY>0||imgX+img.width*imgScale<width||imgY+img.height*imgScale<height)
-            // {
-            //     if(imgX>0)
-            //         imgX=0;
-            //     if(imgY>0)
-            //         imgY=0;
-            //     // if(imgX+img.width<width)
-            //     //     imgX=-img.width*imgScale;
-            //     // if(imgY+img.height<height)
-            //     //     imgY=-img.height*imgScale;
-            //     drawImage();
-            // }
-            // else
-            //     judge = true;
-            // }
+
         }
     // 约束双指操作,调用缩放函数
     if(e.originalEvent.targetTouches.length == 2)
@@ -240,7 +246,7 @@ $("#canvas").bind("touchend",function(e){
     delta = 0;
     twoFigers = false;
 });
-render();
+requestAnimationFrame(render);
     function render() {
         if(imgX>0){
             imgX -=10;
@@ -258,10 +264,16 @@ render();
             imgX+=10;
             drawImage();
         }
+        // if(img.width*imgScale<window.innerWidth){
+        //     imgScale *=2; 
+        //     scale(img.width,img.height,imgScale);
+        // }
         requestAnimationFrame(render);
     }
 </script>
     <script type="text/javascript" src="js/func.js"></script>
-
 </body>
+<script>
+
+</script>
 </html>

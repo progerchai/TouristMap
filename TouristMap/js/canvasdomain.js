@@ -11,6 +11,10 @@ var dis_move,dis_std,distance = false;//定义双指间距离,及判断是否获
 var width = window.screen.availWidth;
 var height = window.screen.availHeight;
 
+(function init(){
+    var sideBox = document.getElementById("sideBox");
+    sideBox.style.width = width;
+})();
 function loadImg(){
     img=new Image();
     // img.src="https://www.ffgbookbar.cn/TouristMap/images/map.jpg";
@@ -32,24 +36,16 @@ function scale(dre_x,dre_y,delta){
 // 缩放约束
     // if(imgX+pos_temp.x > 0||imgY+pos_temp.y>0||imgX+pos_temp.x<window.screen.availWidth-img.width*imgScale||imgY+pos_temp.y<window.screen.availHeight-img.height*imgScale)
     //             return 0;
-    // alert(img.height*imgScale+"<?"+window.innerHeight);
     if(img.height*imgScale<window.innerHeight)
     {
-                delta = 0;
-        putIcons(what);
+        if(delta>0)
+        imgScale/=2;
+        else if(delta<0)
+        imgScale*=2;
+    alert("不能再缩小了哦！");
         return 0;
     }
-    else{
-        if(imgScale<0.125)
-    {
-        alert("不能继续缩小了哦！");
-        return 0;
-    }
-    if(imgScale>8)
-    {
-        alert("不能继续放大了哦！");
-        return 0;
-    }
+
     if(delta>0){
         imgX=imgX*2-pos_temp.x;
         imgY=imgY*2-pos_temp.y;
@@ -61,9 +57,8 @@ function scale(dre_x,dre_y,delta){
             delta = 0;
     drawImage();
     putIcons(what);
-    };
-
 }
+
 //得到图片距离canvas的左上角初始点的像素坐标
 function windowToCanvas(canvas,x,y){
     var bbox = canvas.getBoundingClientRect();

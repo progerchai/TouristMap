@@ -126,6 +126,12 @@ function fangda(){
 function suoxiao(){
      scale(width/2,height/2,-100);
 }
+function restore(){
+    imgScale = 1;
+    imgX = -img.width/2;
+    imgY = -img.height/2;
+   drawImage();
+}
 // flow为表示第几张图片,intr_x,intr_y为手指点击点的坐标
 function showIntroduce(flow,what,intr_x,intr_y){
     // alert(flow);

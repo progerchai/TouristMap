@@ -18,11 +18,11 @@
 </head>
 <body id="body">
 
-    <div class="sideBox" id="sideBox" style="background-color:rgba(247,131,97,0.7);" >
-        <a id="jingdian" value="1" onclick="changeType(1)">景点</a>
-        <a id="zhusu" value="2" onclick="changeType(2)">住宿</a>
-        <a id="canyin" value="3" onclick="changeType(3)">餐饮</a>
-        <a id="cesuo" value="4" onclick="changeType(4)">厕所</a>
+    <div class="sideBox" id="sideBox" style="background-color:rgba(255,255,255,0.7);" >
+        <a class="menu1" id="jingdian" value="1" onclick="changeType(1)">景点</a>
+        <a class="menu2" id="zhusu" value="2" onclick="changeType(2)">住宿</a>
+        <a class="menu3" id="canyin" value="3" onclick="changeType(3)">餐饮</a>
+        <a class="menu4" id="cesuo" value="4" onclick="changeType(4)">厕所</a>
     </div>
 
 <!-- 添加左下角标签 -->
@@ -42,7 +42,7 @@
         <div class="mask" :class="{'maskpop':isShow}" @click="pophide"></div>
         <div class="content" :class="{'trans':isShow}" style="z-index: 10;">
 
-            <div class="pop" id="pop" style="display: none;overflow-y:scroll;height:300px;">
+            <div class="pop" id="pop" style="overflow-y:scroll;height:300px;display: none;">
 
                 <div class="pop-top" id="pop-top">
                   <div class="topleft" style="font-size: 15pt;margin-left: 5%;"><p>景区列表</p></div>
@@ -52,16 +52,16 @@
 
                 <div class="pop-content" id="pop-content"> 
                     <div class="pop-content-right">
-                        <p><a href="#">百丈漈</a></p>
-                        <p><a href="#">铜铃山</a></p>
-                        <p><a href="#">月老山</a></p>
-                        <p><a href="#">猴王谷</a></p>
-                        <p><a href="#">安福寺</a></p>
-                        <p><a href="#">刘基故里</a></p>
-                        <p><a href="#">朱阳九峰</a></p>   
-                        <p><a href="#">峡谷景廊</a></p>
-                        <p><a href="#">岩门大峡谷</a></p>     
-                        <p><a href="#">九溪欢乐谷</a></p>   
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">百丈漈</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">铜铃山</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">月老山</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">猴王谷</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">安福寺</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">刘基故里</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">朱阳九峰</a></p>   
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">峡谷景廊</a></p>
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">岩门大峡谷</a></p>     
+                        <p><a href="http://720.mzgtuan.com/quanjing/hp/">九溪欢乐谷</a></p>   
                         <p><a href="androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=36.547901&lon=104.258354&dev=1&style=2">导航</a></p>
                     </div>
                 </div>
@@ -73,14 +73,14 @@
 <!-- 添加弹出介绍div -->
 <div class="intr" id="intr" style="display: none;z-index:2;">
    <div class="intr-top">
-        <div class="left"><span id="intr_title">span测试内容</span></div>
+        <div class="left"><span id="intr_title">span测试内容span测试内容span测试内容span测试内容span测试内容span测试内容</span></div>
         <div class="right"><span id="close_intr" onclick="close_intr()"><i class="iconfont icon-cuowu"></i></span></div>
         <!-- 修改为 icon图标 -->
    </div>
    <div class="intr-body">
        <div class="body_img"><img id="intr_img"></div>
         <div class="bodyright">
-            <div class="text"><p id="intr_content">span测试内容</p></div>
+            <div class="text"><p id="intr_content">span测试内容span测试内容span测试内容span测试内容span测试内容span测试内容</p></div>
             <div class="intr-foot">
                 <button class="btn" id="speak" onclick="autoPlay()" style="width: 50%;height: 60%;">语音</button>
                 <button class="btn" id="goto" onclick="gotoMap()" style="width: 50%;height: 60%;">导航</button>
@@ -105,7 +105,7 @@ var DEF_C = 40075020;//地球赤道位置周长
 var mp3list = "mp3/test1.mp3";
 var type =1;//判断景点类型
 var iconNum = 0,iconNum1 = 0;//用来确定是那个icon图标被点击
-    var vm = new Vue({
+var vm = new Vue({
     el:"#wrap",
     data:{
     isShow:false
@@ -121,11 +121,14 @@ methods:{
     pophide:function () {
     this.isShow = false;
     document.getElementById("pop").style.display = "none";
+    window.history.go(0);
     console.log(2);
     }
 }
 
 });
+
+
     //初始化画布
 (function int(){
     canvas=document.getElementById('canvas');
@@ -142,7 +145,13 @@ methods:{
     readTextFile('json/startPoint.json');
 })();
 
+
 function changeType(num){
+    for(var i = 1;i<=4;i++)
+    {
+       $("menu"+i).removeClass('lock'); 
+    }
+    $("menu"+num).addClass('lock');
     what = num;
     putIcons(what);
 }

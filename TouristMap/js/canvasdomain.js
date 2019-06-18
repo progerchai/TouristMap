@@ -17,8 +17,8 @@ var height = window.screen.availHeight;
 })();
 function loadImg(){
     img=new Image();
-    // img.src="https://www.ffgbookbar.cn/TouristMap/images/map.jpg";
-    img.src="https://www.sskstudio.cn/map.jpg";
+    img.src="https://www.ffgbookbar.cn/TouristMap/images/map.jpg";
+    // img.src="/images/map.jpg";
     img.onload=function(){
         imgX = -img.width/2;
         imgY = -img.height/2;
@@ -30,29 +30,29 @@ function loadImg(){
 function scale(dre_x,dre_y,delta){
     var pos_temp=windowToCanvas(canvas,dre_x,dre_y);
     if(delta>0)
-        imgScale*=2;
+        imgScale*=1.5;
     else if(delta<0)
-        imgScale/=2;
+        imgScale/=1.5;
 // 缩放约束
     // if(imgX+pos_temp.x > 0||imgY+pos_temp.y>0||imgX+pos_temp.x<window.screen.availWidth-img.width*imgScale||imgY+pos_temp.y<window.screen.availHeight-img.height*imgScale)
     //             return 0;
     if(img.height*imgScale<window.innerHeight)
     {
         if(delta>0)
-        imgScale/=2;
+        imgScale/=1.5;
         else if(delta<0)
-        imgScale*=2;
+        imgScale*=1.5;
     alert("不能再缩小了哦！");
         return 0;
     }
 
     if(delta>0){
-        imgX=imgX*2-pos_temp.x;
-        imgY=imgY*2-pos_temp.y;
+        imgX=imgX*1.5-pos_temp.x;
+        imgY=imgY*1.5-pos_temp.y;
     }
     else if(delta<0){
-        imgX=imgX*0.5+pos_temp.x*0.5;
-        imgY=imgY*0.5+pos_temp.y*0.5;
+        imgX=imgX/1.5+pos_temp.x/1.5;
+        imgY=imgY/1.5+pos_temp.y/1.5;
     }
             delta = 0;
     drawImage();

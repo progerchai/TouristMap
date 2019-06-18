@@ -8,7 +8,7 @@ html,body{
 	height: 100%;
     width: 100%;
 	overflow: hidden;
-	-webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
 }
 #wrap{
     width: 100%;
@@ -62,6 +62,14 @@ html,body{
     text-align: center;
     font-size: 16pt;
 }
+.pop-content-right a{
+    text-decoration: none;
+    font-size: 12pt;
+}
+.lock{
+    color: #2591E3;
+    font-size: 16pt;
+}
 .topleft{
     display: inline-block;
 }
@@ -79,11 +87,13 @@ html,body{
     text-align: justify;
     /*opacity:0.15;
     filter: alpha(opacity=15);*/
-    padding: 0px 20px;
+    /*padding: 0px 20px;*/
+    text-align: center;
     /*box-sizing: border-box;*/
     z-index: 5;
+    display: flex;
     }
-.sideBox a{display: inline-block; text-decoration: none;width: 100px;}
+.sideBox a{text-decoration: none;flex: 1;}
 .sideBox::-webkit-scrollbar{display: none;}
 .button_div{
     position: absolute;
@@ -137,6 +147,11 @@ height:40px;*/
 .left{
     padding-left: 4%;
     width: 92%;
+     overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 .right{
     width: 8%;
@@ -164,11 +179,16 @@ height:40px;*/
 
 }
 .bodyright .text{
-    line-height: 12px;
-    height: 30%;
+    line-height: 16px;
+    height: 32px;
 }
-.intr_content{
-    font-size: 12pt;
+
+.text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .btn { 
     display: block; 
